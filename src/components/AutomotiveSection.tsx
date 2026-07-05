@@ -308,12 +308,19 @@ export default function AutomotiveSection({ currentLang, listings }: AutomotiveS
                     <div className="lg:col-span-7 space-y-5">
                       {/* Interactive Image Slider */}
                       <div className="relative aspect-video overflow-hidden bg-[#0A0A0A] rounded-sm border border-white/10 group/modal-slider">
-                        <img 
-                          src={(selectedCar.imageUrls && selectedCar.imageUrls.length > 0 ? selectedCar.imageUrls : [selectedCar.imageUrl])[modalImageIndex]} 
-                          alt={selectedCar.title} 
-                          className="w-full h-full object-cover"
-                          referrerPolicy="no-referrer"
-                        />
+                        <AnimatePresence mode="wait">
+                          <motion.img 
+                            key={modalImageIndex}
+                            src={(selectedCar.imageUrls && selectedCar.imageUrls.length > 0 ? selectedCar.imageUrls : [selectedCar.imageUrl])[modalImageIndex]} 
+                            alt={selectedCar.title} 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="w-full h-full object-cover absolute inset-0"
+                            referrerPolicy="no-referrer"
+                          />
+                        </AnimatePresence>
                         
                         {(selectedCar.imageUrls && selectedCar.imageUrls.length > 1) && (
                           <>

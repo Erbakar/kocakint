@@ -20,6 +20,41 @@ import CarCareSection from './components/CarCareSection';
 import { Cpu, Landmark, Car, ArrowUpRight, ShieldCheck, Sparkles, Star, Anchor, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
+interface PageHeroProps {
+  image: string;
+  deptLabel: string;
+  title: string;
+  description: string;
+  isRTL: boolean;
+}
+
+function PageHero({ image, deptLabel, title, description, isRTL }: PageHeroProps) {
+  return (
+    <div className="relative h-64 sm:h-80 w-full overflow-hidden rounded-sm border border-white/10 mb-8 flex flex-col justify-end p-6 sm:p-10 bg-[#0A0A0A]">
+      <img 
+        src={image} 
+        alt={title} 
+        className="absolute inset-0 w-full h-full object-cover opacity-25 hover:scale-105 transition-transform duration-10000 ease-out"
+        referrerPolicy="no-referrer"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/70 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A]/90 via-[#0A0A0A]/30 to-transparent"></div>
+      
+      <div className="relative z-10 text-left" style={{ textAlign: isRTL ? 'right' : 'left' }}>
+        <span className="text-[10px] font-mono uppercase text-[#C5A059] tracking-[0.25em] font-extrabold block mb-2">
+          {deptLabel}
+        </span>
+        <h1 className="text-2xl sm:text-3xl font-serif text-white leading-tight font-normal">
+          {title}
+        </h1>
+        <p className="text-xs sm:text-sm text-white/50 mt-2 font-sans max-w-2xl leading-relaxed">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [currentLang, setCurrentLang] = useState<Language>('en');
   const [activeSection, setActiveSection] = useState<ActiveSection>('home');
@@ -53,18 +88,19 @@ export default function App() {
       setIsAdminLoggedIn(true);
     }
 
-    // Hash routing listener for direct access (e.g. /#admin)
+    // Hash & Pathname routing listener for direct access (e.g. /admin or /#admin)
     const handleHashChange = () => {
       const hash = window.location.hash;
-      if (hash === '#admin' || hash === '#/admin') {
+      const path = window.location.pathname;
+      if (hash === '#admin' || hash === '#/admin' || path === '/admin' || path.endsWith('/admin')) {
         setActiveSection('admin');
-      } else if (hash === '#software') {
+      } else if (hash === '#software' || path === '/software' || path.endsWith('/software')) {
         setActiveSection('software');
-      } else if (hash === '#trade') {
+      } else if (hash === '#trade' || path === '/trade' || path.endsWith('/trade')) {
         setActiveSection('trade');
-      } else if (hash === '#automotive') {
+      } else if (hash === '#automotive' || path === '/automotive' || path.endsWith('/automotive')) {
         setActiveSection('automotive');
-      } else if (hash === '#carcare') {
+      } else if (hash === '#carcare' || path === '/carcare' || path.endsWith('/carcare')) {
         setActiveSection('carcare');
       } else if (hash === '#home' || !hash) {
         setActiveSection('home');
@@ -73,8 +109,10 @@ export default function App() {
 
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handleHashChange);
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleHashChange);
     };
   }, []);
 
@@ -264,6 +302,13 @@ export default function App() {
             >
               {/* Hero Banner Grid */}
               <div className="relative py-16 sm:py-24 overflow-hidden border-b border-white/10" id="hero-banner">
+                {/* Background high-resolution corporate skyscraper image */}
+                <img 
+                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80" 
+                  alt="Corporate Tower Backdrop" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-[0.12] mix-blend-lighten"
+                  referrerPolicy="no-referrer"
+                />
                 {/* Dynamic futuristic grid background design */}
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-50"></div>
                 <div className="absolute top-20 left-10 w-96 h-96 bg-[#C5A059]/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }}></div>
@@ -379,6 +424,23 @@ export default function App() {
                 <span className="text-[#C5A059]">{t.navSoftware.toUpperCase()}</span>
               </div>
 
+              {/* Elegant Section Hero Image */}
+              <PageHero 
+                image="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80"
+                deptLabel={
+                  currentLang === 'de' ? 'ABTEILUNG 01 // BERLINER TECH HUB' :
+                  currentLang === 'ar' ? 'القسم ٠١ // مركز برلين للتكنولوجيا' :
+                  'DEPT_01 // BERLIN TECH HUB'
+                }
+                title={t.navSoftware}
+                description={
+                  currentLang === 'de' ? 'Führende Softwarearchitektur, tiefgehende KI-Modellintegrationen und hochperformante, ausfallsichere Cloud-Infrastrukturen.' :
+                  currentLang === 'ar' ? 'الريادة في بنيات البرمجيات للمؤسسات، نماذج الذكاء الاصطناعي، وتكامل البنى السحابية القوية.' :
+                  'Enterprise-grade software architectures, specialized AI/ML model deployment, and highly resilient cloud orchestration.'
+                }
+                isRTL={isRTL}
+              />
+
               {/* Dedicated Page View Content */}
               <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
                 <SoftwareSection currentLang={currentLang} />
@@ -405,6 +467,23 @@ export default function App() {
                 <span>/</span>
                 <span className="text-[#C5A059]">{t.navTrade.toUpperCase()}</span>
               </div>
+
+              {/* Elegant Section Hero Image */}
+              <PageHero 
+                image="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=80"
+                deptLabel={
+                  currentLang === 'de' ? 'ABTEILUNG 02 // INTERNATIONALE BEZIEHUNGEN & SCHENGEN' :
+                  currentLang === 'ar' ? 'القسم ٠٢ // العلاقات الدولية وممر شنغن' :
+                  'DEPT_02 // INTERNATIONAL RELATIONS & SCHENGEN GATEWAY'
+                }
+                title={t.navTrade}
+                description={
+                  currentLang === 'de' ? 'Zertifizierter Außenhandel, Zollabfertigung und interkontinentale Lieferketten für nahtlose transnationale Logistik.' :
+                  currentLang === 'ar' ? 'تسهيل التجارة العالمية المتوافقة مع شنغن، التخليص الجمركي الدبلوماسي الآمن، وممرات الشحن متعددة الوسائط عالية الكفاءة.' :
+                  'Schengen-compliant global trade facilitation, secure diplomatic customs clearance, and high-efficiency multimodal shipping corridors.'
+                }
+                isRTL={isRTL}
+              />
 
               {/* Dedicated Page View Content */}
               <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
@@ -433,6 +512,23 @@ export default function App() {
                 <span className="text-[#C5A059]">{t.navAutomotive.toUpperCase()}</span>
               </div>
 
+              {/* Elegant Section Hero Image */}
+              <PageHero 
+                image="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1600&q=80"
+                deptLabel={
+                  currentLang === 'de' ? 'ABTEILUNG 03 // EXKLUSIVE FAHRZEUG-BESCHAFFUNG' :
+                  currentLang === 'ar' ? 'القسم ٠٣ // تأمين أساطيل السيارات الفاخرة' :
+                  'DEPT_03 // PRESTIGE FLEET ACQUISITIONS'
+                }
+                title={t.navAutomotive}
+                description={
+                  currentLang === 'de' ? 'Direktbezug aus Deutschland, Exportlogistik und Luxusfahrzeugvermittlung optimiert für GCC- und EU-Spezifikationen.' :
+                  currentLang === 'ar' ? 'تأمين عابر للقارات لأساطيل السيارات الألمانية الفاخرة، والسيارات الرياضية النادرة، والتنسيق الجمركي بين الاتحاد الأوروبي والخليج العربي.' :
+                  'Continental sourcing of premium German automotive fleets, luxury exotic sports cars, and customs coordination for EU-GCC corridors.'
+                }
+                isRTL={isRTL}
+              />
+
               {/* Dedicated Page View Content */}
               <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
                 <AutomotiveSection currentLang={currentLang} listings={listings} />
@@ -460,6 +556,23 @@ export default function App() {
                 <span className="text-[#C5A059]">{t.navCarCare.toUpperCase()}</span>
               </div>
 
+              {/* Elegant Section Hero Image */}
+              <PageHero 
+                image="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1600&q=80"
+                deptLabel={
+                  currentLang === 'de' ? 'ABTEILUNG 04 // LACKSCHUTZ-LABORATORIEN' :
+                  currentLang === 'ar' ? 'القسم ٠٤ // مختبرات حماية الطلاء الفاخر' :
+                  'DEPT_04 // PRESTIGE SHIELD LABS'
+                }
+                title={t.navCarCare}
+                description={
+                  currentLang === 'de' ? 'Chirurgisch präzise Montage von Lackschutzfolie (PPF) und hydrophobe High-Gloss PPG Glaskeramik-Versiegelung der nächsten Generation.' :
+                  currentLang === 'ar' ? 'تطبيق أفلام حماية الطلاء (PPF) ذات المعالجة الذاتية ودروع السيراميك والزجاج المائي PPG عالية اللمعان والمقاومة للمياه.' :
+                  'Surgical-grade Paint Protection Film (PPF) application and next-generation high-gloss PPG hydrophobic glass/ceramic armor.'
+                }
+                isRTL={isRTL}
+              />
+
               {/* Dedicated Page View Content */}
               <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
                 <CarCareSection currentLang={currentLang} />
@@ -477,7 +590,32 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.2 }}
+              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16"
             >
+              {/* Breadcrumbs */}
+              <div className="flex items-center gap-2 text-xs font-mono mb-8 text-white/40" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                <button onClick={() => handleSectionChange('home')} className="hover:text-white transition-colors">{t.navHome.toUpperCase()}</button>
+                <span>/</span>
+                <span className="text-[#C5A059]">ADMIN LEDGER GATEWAY</span>
+              </div>
+
+              {/* Elegant Section Hero Image */}
+              <PageHero 
+                image="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=80"
+                deptLabel={
+                  currentLang === 'de' ? 'KERN-INFRASTRUKTUR // SICHERHEITSREGISTER' :
+                  currentLang === 'ar' ? 'البنية التحتية الأساسية // سجل الأمان المغلق' :
+                  'CORE INFRASTRUCTURE // SECURITY LEDGER'
+                }
+                title="Consortium Registry Control"
+                description={
+                  currentLang === 'de' ? 'Anmeldung für autorisiertes Personal erforderlich. Operations-Dashboard zum Veröffentlichen, Synchronisieren oder Archivieren von Fahrzeugen.' :
+                  currentLang === 'ar' ? 'مطلوب صلاحيات الموظفين المعتمدين فقط. لوحة تحكم لإضافة وتعديل وحذف أصول السيارات للكونسورتيوم.' :
+                  'Authorized personnel credentials required. Operations dashboard to publish, synchronize, or archive corporate vehicle assets.'
+                }
+                isRTL={isRTL}
+              />
+
               <AdminPanel
                 currentLang={currentLang}
                 listings={listings}
