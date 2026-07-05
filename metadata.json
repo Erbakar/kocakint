@@ -1,0 +1,8 @@
+{
+  "name": "Kocakint",
+  "description": "Kocakint.com - Global corporate hub for Software & Innovation, Foreign Trade, and Automotive. Operating in Berlin and Dubai.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
