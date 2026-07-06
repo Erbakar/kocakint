@@ -15,6 +15,7 @@ export const translations: Record<Language, any> = {
     navTrade: 'International Relations',
     navAutomotive: 'Automotive Listings',
     navCarCare: 'Car Care',
+    navRental: 'Luxury Car Rental',
     navAdmin: 'Admin Portal',
     
     // SEO & GEO Labels for crawler visualization
@@ -151,6 +152,7 @@ export const translations: Record<Language, any> = {
     navTrade: 'Internationale Beziehungen',
     navAutomotive: 'Automobil-Inserate',
     navCarCare: 'Fahrzeugpflege',
+    navRental: 'Luxusautovermietung',
     navAdmin: 'Admin-Portal',
     
     seoMeta: 'SEO- und GEO-strukturierte Metadaten',
@@ -278,6 +280,7 @@ export const translations: Record<Language, any> = {
     navTrade: 'العلاقات الدولية',
     navAutomotive: 'إعلانات السيارات',
     navCarCare: 'العناية بالسيارات',
+    navRental: 'تأجير السيارات الفارهة',
     navAdmin: 'بوابة الإدارة',
     
     seoMeta: 'بيانات التعريف المهيكلة لتحسين محركات البحث والجغرافيا',
@@ -395,5 +398,142 @@ export const translations: Record<Language, any> = {
     carCareFacilityDesc: 'صالات تركيب خالية من الغبار ومتحكم في مناخها، أنظمة سحب مصفاة نشطة، إضاءة دقيقة لفحص العيوب، وفنيو تركيب معتمدون ومحترفون.',
 
     footerRights: 'جميع الحقوق محفوظة.'
+  },
+  tr: {
+    dir: 'ltr',
+    brandName: 'Kocakint',
+    tagline: 'Küresel Teknolojik İnovasyon, Stratejik Dış Ticaret ve Premium Otomotiv Çözümleri',
+    navHome: 'Ana Sayfa',
+    navSoftware: 'Yazılım Teknolojileri',
+    navTrade: 'Uluslararası İlişkiler',
+    navAutomotive: 'Araç İlanları',
+    navCarCare: 'Araç Bakımı',
+    navRental: 'Lüks Araç Kiralama',
+    navAdmin: 'Yönetici Portalı',
+    
+    // SEO & GEO Labels
+    seoMeta: 'SEO ve GEO Yapılandırılmış Meta Verileri',
+    geoTags: 'Coğrafi Anahtar Kelimeler (Berlin - Dubai Merkezleri)',
+    schemaOrg: 'Schema.org Kurumsal Kimlik İşaretlemesi',
+    indexedKeywords: 'SEO Tarafından Dizine Eklenmiş İçerik Etiketleri',
+
+    // Hero Section
+    heroTitle: 'Avrupa İnovasyonunu Küresel Pazarlarla Buluşturuyoruz',
+    heroSubtitle: 'Merkezi Berlin ve Dubai\'de bulunan Kocakint; dijital dönüşüm, sınırlar arası ticaret ve premium otomotiv brokerliği alanlarında faaliyet gösteren çeşitlendirilmiş bir konglomeradır.',
+    exploreDivisions: 'Bölümlerimizi Keşfedin',
+    getInTouch: 'Bizimle İletişime Geçin',
+    activeOffices: 'Kurumsal Ofislerimiz',
+    officeBerlinDesc: 'AB pazarları, yazılım mühendisliği mükemmeliyeti ve otomotiv hassasiyeti arasında köprü kuruyor.',
+    officeDubaiDesc: 'MEA bölgesi dağıtımı, lüks otomotiv brokerliği ve küresel ithalat-ihracat rotalarının giriş kapısı.',
+
+    // Common Section Headers
+    learnMore: 'Daha Fazla Bilgi',
+    contactOurExpert: 'Sektör Uzmanımızla İletişime Geçin',
+    locationsTitle: 'Küresel Varlık ve Stratejik Kapılar',
+    locationsSubtitle: 'Kocakint, Almanya ve BAE\'deki tam entegre fiziksel merkezleri aracılığıyla Batı Avrupa ile Körfez İşbirliği Konseyi (GCC) arasında köprü oluşturur.',
+
+    // Software & Innovation Section
+    softwareTitle: 'Yazılım, Teknoloji ve İnovasyon',
+    softwareSubtitle: 'Özel Kurumsal Çözümler, Yapay Zeka Mühendisliği ve Yeni Nesil Bulut Sistemleri.',
+    softwareMainPara: 'Berlin merkezli Yazılım ve İnovasyon bölümümüz, ölçeklenebilir kurumsal düzeyde mimariler tasarlar. Alman mühendislik standartlarından ve çevik geliştirme metodolojilerinden yararlanarak; iş akışlarını otomatikleştirmede, güvenli SaaS uygulamaları oluşturmada ve yüksek performanslı bulut çerçevelerini entre etmekte uzmanlaşıyoruz.',
+    softwareFeat1Title: 'Yapay Zeka ve Makine Öğrenimi',
+    softwareFeat1Desc: 'Ticaret ve endüstriyel otomasyon için özel LLM entegrasyonu, otomatik belge işleme motorları ve tahmine dayalı analitik.',
+    softwareFeat2Title: 'Bulut Tabanlı Altyapılar',
+    softwareFeat2Desc: 'Almanya\'daki katı GDPR yönergelerine uygun, Google Cloud ve AWS üzerinde oluşturulmuş son derece ölçeklenebilir ve dayanıklı mikro hizmet mimarileri.',
+    softwareFeat3Title: 'IoT ve Akıllı Lojistik',
+    softwareFeat3Desc: 'Sınırlar arası dış ticaret operasyonları için optimize edilmiş akıllı donanım entegrasyonu, telemetri akışları ve tedarik zinciri şeffaflığı arayüzleri.',
+    softwareTechStack: 'Teknoloji Yetkinliği',
+
+    // International Relations Section (SEO/GEO-Optimized)
+    tradeTitle: 'Uluslararası İlişkiler',
+    tradeSubtitle: 'Sorunsuz Sınır Ötesi Tedarik Zinciri Operasyonları ve Stratejik Ticaret Rotaları',
+    tradeMainPara: 'Kocakint\'in Dış Ticaret bölümü, Berlin ve Dubai\'nin ticari merkezlerinden faaliyet göstererek Avrupa Birliği ile Orta Doğu arasında sağlam bir köprü görevi görür. Güvenli ticareti, mevzuata uygunluğu, kargo gümrük işlemlerini ve küresel dağıtım lojistiğini yönetiyoruz.',
+    tradeRoutesTitle: 'Birincil Ticaret Koridorları',
+    tradeRoute1: 'Almanya (AB) ⇄ Birleşik Arap Emirlikleri (GCC)',
+    tradeRoute1Desc: 'Endüstriyel makineler, premium bileşenler, güneş enerjisi teknolojileri ve seçkin araçların doğrudan akışı.',
+    tradeRoute2: 'Kıtalararası Lojistik Rotaları',
+    tradeRoute2Desc: 'Jebel Ali Limanı (Dubai) üzerinden yapılandırılmış deniz yolu tedarik koridorları ve Almanya üzerinden gelişmiş intermodal demiryolu/havayolu taşımacılığı.',
+    tradeComplianceTitle: 'Uyum ve Gümrük İşlemleri',
+    tradeComplianceDesc: 'Vergisel açıdan verimli geçiş için AB Schengen uyumluluğuna ve GCC Gümrük Birliği düzenlemelerine sıkı sıkıya bağlı kalarak sorunsuz gümrük operasyonları sağlamak.',
+    tradeSeoSection: 'Stratejik GEO-SEO Anahtar Kelimeleri',
+    tradeKeywordsPara: 'Alman endüstriyel ihracatı, GCC gümrükleme, Jebel Ali dağıtımı, Schengen ticari uyumu, çift kullanımlı gümrükleme, JAFZA emtia merkezi, Avrupa mühendislik tedariki, Almanya-BAE ticaret koridoru.',
+
+    // Automotive Section
+    automotiveTitle: 'Otomotiv Brokerliği',
+    automotiveSubtitle: 'Premium Araçlar, Ticari Filolar ve Kıtalararası Otomotiv Lojistiği',
+    automotivePara: 'Premium otomotiv departmanımız; seçkin lüks otomobillerin, ticari taşıma filolarının ve elektrikli araçların tedarikini, brokerliğini ve geçişini kolaylaştırır. Güvenli Alman araç tedariğinden Dubai lojistik gümrüklemesine kadar tüm süreci yönetiyoruz.',
+    filterAll: 'Tüm Araçlar',
+    filterAvailable: 'Mevcut',
+    filterSold: 'Satıldı',
+    statusAvailable: 'Mevcut',
+    statusSold: 'Satıldı',
+    specsLabel: 'Teknik Özellikler',
+    priceLabel: 'Fiyat',
+    mileageLabel: 'Kilometre',
+    yearLabel: 'Yıl',
+    transmissionLabel: 'Şanzıman',
+    fuelLabel: 'Yakıt',
+    inquireBtn: 'Araç Hakkında Bilgi Alın',
+    noVehicles: 'Seçtiğiniz filtreye uygun araç bulunamadı.',
+    viewDetails: 'Detayları Görüntüle',
+    closeBtn: 'Kapat',
+
+    // Admin Panel
+    adminTitle: 'Yönetici Yönetim Paneli',
+    adminSubtitle: 'Araç İlanlarını Oluşturun ve Yönetin',
+    adminLoginRequired: 'Kimlik Doğrulama Gerekli',
+    adminPasswordPlaceholder: 'Yönetici Şifresini Girin',
+    adminLoginBtn: 'Giriş Yap',
+    adminLogoutBtn: 'Çıkış Yap',
+    adminWrongPassword: 'Geçersiz şifre. İpucu: 58Salih58',
+    addNewListing: 'Yeni Araç İlanı Ekle',
+    editListing: 'İlanı Düzenle',
+    deleteListing: 'İlanı Sil',
+    formTitle: 'İlan Başlığı (örneğin Porsche 911 GT3)',
+    formMake: 'Marka',
+    formModel: 'Model Adı',
+    formYear: 'Model Yılı',
+    formPrice: 'Fiyat (EUR)',
+    formMileage: 'Kilometre (örneğin 15.000 km)',
+    formFuel: 'Yakıt Türü (örneğin Benzin, Elektrik)',
+    formTransmission: 'Şanzıman (örneğin Otomatik)',
+    formImageUrl: 'Görsel URL\'si (İsteğe bağlı)',
+    formStatus: 'İlan Durumu',
+    formDescEn: 'Açıklama (İngilizce)',
+    formDescDe: 'Açıklama (Almanca)',
+    formDescAr: 'Açıklama (Arapça)',
+    formSpecs: 'Teknik Özellikler (virgülle ayrılmış)',
+    submitAdd: 'İlan Oluştur',
+    submitSave: 'Değişiklikleri Kaydet',
+    cancelBtn: 'İptal',
+    statusAvailableForm: 'Mevcut',
+    statusSoldForm: 'Satıldı',
+    adminHint: 'Giriş yapmak ve araç eklemek/düzenlemek için "58Salih58" şifresini girin.',
+
+    // Contact info & office cards
+    contactTitle: 'Kurumsal Sorular',
+    contactPlaceholderName: 'Adınız Soyadınız',
+    contactPlaceholderEmail: 'E-posta Adresiniz',
+    contactPlaceholderMessage: 'Mesajınız',
+    contactSubmitBtn: 'Mesaj Gönder',
+    contactSuccess: 'Mesajınız için teşekkür ederiz. Bölge yöneticimiz en kısa sürede sizinle iletişime geçecektir.',
+    
+    // Locations
+    localTime: 'Yerel Saat',
+    berlinSEOText: 'Berlin, Almanya\'nın kalbinde yer alan ofisimiz, AB teknoloji geliştirme faaliyetlerine öncülük etmekte ve doğrudan seçkin Alman üreticilerden otomotiv tedariki sağlamaktadır.',
+    dubaiSEOText: 'Dubai, BAE\'de stratejik bir konuma sahip olan ofisimiz, Dubai Multi Commodities Centre (DMCC) kapsamında Orta Doğu ve Asya ticaret rotalarını ve vergi açısından optimize edilmiş dağıtım lojistiğini yönetmektedir.',
+    
+    // Car Care Section
+    carCareTitle: 'Premium Araç Bakımı ve Detaylı Temizlik',
+    carCareSubtitle: 'Son Teknoloji Boya Koruma Filmi (PPF) ve Ultra Premium Detaylı Temizlik Hizmetleri',
+    carCarePara: 'Kocakint Car Care, son teknolojiye sahip tesislerimizde kişiye özel boya koruma ve üst düzey detaylı temizlik hizmetleri sunar. Sektörün en iyi kendini yenileyebilen poliüretan filmlerini ve gelişmiş detaylı temizlik ekipmanlarını kullanarak, otomotiv yatırımlarınızın ilk günkü gibi kusursuz, showroom kondisyonunda kalmasını sağlıyoruz.',
+    carCareService1Title: 'Boya Koruma Filmi (PPF) Uygulaması',
+    carCareService1Desc: 'Çakıl taşlarına, çiziklere, yol kalıntılarına ve UV solmasına karşı koruma sağlayan yüksek performanslı, kendi kendini iyileştiren poliüretan film. Kusursuz kenarlar için özel hassas hazır şablonlar.',
+    carCareService2Title: 'Ultra Premium Detaylı Temizlik ve Çok Aşamalı Yıkama',
+    carCareService2Desc: 'Kir arındırma yıkaması, kil bar işlemleri, makineyle boya düzeltme ve yüksek dayanıklılığa sahip hidrofobik seramik kaplama uygulaması. İç kısımda lüks deri ve alkantara döşemelerin korunması.',
+    carCareFacilityTitle: 'Seçkin Tesis Standartlarımız',
+    carCareFacilityDesc: 'Tozsuz, iklim kontrollü kaplama bölmeleri, aktif filtreli emiş sistemleri, kusur tespiti için cerrahi düzeyde aydınlatma ve sertifikalı usta uygulayıcılar.',
+
+    footerRights: 'Tüm hakları saklıdır.'
   }
 };

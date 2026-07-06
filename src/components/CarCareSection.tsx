@@ -4,15 +4,16 @@
  */
 
 import React, { useState } from 'react';
-import { Language } from '../types';
+import { Language, CarCarePricing } from '../types';
 import { translations } from '../translations';
 import { Sparkles, ShieldCheck, Droplet, Layers, HelpCircle, ArrowUpRight, CheckCircle2, Car, BadgePercent, ShieldAlert, Waves, Star, ChevronRight } from 'lucide-react';
 
 interface CarCareSectionProps {
   currentLang: Language;
+  pricingData: CarCarePricing;
 }
 
-export default function CarCareSection({ currentLang }: CarCareSectionProps) {
+export default function CarCareSection({ currentLang, pricingData }: CarCareSectionProps) {
   const t = translations[currentLang];
   const isRTL = currentLang === 'ar';
 
@@ -21,12 +22,6 @@ export default function CarCareSection({ currentLang }: CarCareSectionProps) {
   const [serviceSelected, setServiceSelected] = useState<'ppf' | 'detailing' | 'wash'>('ppf');
   const [inquirySent, setInquirySent] = useState(false);
   const [carName, setCarName] = useState('');
-
-  const pricingData = {
-    sedan: { ppf: 2900, detailing: 750, wash: 120 },
-    suv: { ppf: 3400, detailing: 890, wash: 150 },
-    sport: { ppf: 3200, detailing: 950, wash: 180 }
-  };
 
   const currentPrice = pricingData[vehicleType][serviceSelected];
 
@@ -64,7 +59,7 @@ export default function CarCareSection({ currentLang }: CarCareSectionProps) {
         ar: ['بروتوكول غسيل آمن من ٢٤ خطوة', 'تنظيف السطح بالطين الخاص', 'تنظيف العجلات والمكابح بعمق', 'تفريغ هواء داخلي مجهري للمقاعد']
       },
       icon: Waves,
-      priceEstimate: '€120 - €180'
+      priceEstimate: `€${pricingData.sedan.wash} - €${pricingData.sport.wash}`
     },
     {
       id: 'detailing' as const,
@@ -90,7 +85,7 @@ export default function CarCareSection({ currentLang }: CarCareSectionProps) {
         ar: ['تصحيح الطلاء بثلاث مراحل', 'إزالة الدوائر والبهتان بالكامل', 'ترطيب جلد النابا والألكانتارا', 'تنظيف تجميلي وتفصيلي لحجرة المحرك']
       },
       icon: Sparkles,
-      priceEstimate: '€750 - €950'
+      priceEstimate: `€${pricingData.sedan.detailing} - €${pricingData.sport.detailing}`
     },
     {
       id: 'ppf' as const,
@@ -116,7 +111,7 @@ export default function CarCareSection({ currentLang }: CarCareSectionProps) {
         ar: ['فيلم بولي يوريثان معالج ذاتياً', 'ضمان لمدة ١٠ سنوات ضد الحصى', 'طلاء زجاج مائي PPG 9H', 'لمعان فائق خالي من أي تموجات عيبية']
       },
       icon: Layers,
-      priceEstimate: '€2,900 - €3,400'
+      priceEstimate: `€${pricingData.sedan.ppf.toLocaleString()} - €${pricingData.suv.ppf.toLocaleString()}`
     }
   ];
 

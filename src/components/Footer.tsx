@@ -10,9 +10,10 @@ import { Clock, MapPin, Phone, Mail, Globe2, Sparkles, CheckCircle2, ChevronRigh
 
 interface FooterProps {
   currentLang: Language;
+  onOpenStaticPage: (page: 'privacy' | 'terms' | 'imprint') => void;
 }
 
-export default function Footer({ currentLang }: FooterProps) {
+export default function Footer({ currentLang, onOpenStaticPage }: FooterProps) {
   const t = translations[currentLang];
   const isRTL = t.dir === 'rtl';
 
@@ -162,13 +163,31 @@ export default function Footer({ currentLang }: FooterProps) {
 
         {/* Lower Banner */}
         <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-          <div className="flex items-center gap-4">
-            <span className="text-white/40">&copy; {new Date().getFullYear()} {t.brandName}. {t.footerRights}</span>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-white/40 text-center sm:text-left" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+            <span>&copy; {new Date().getFullYear()} {t.brandName}. {t.footerRights}</span>
+            <span className="hidden sm:inline text-white/10">|</span>
+            <span className="flex items-center gap-1 justify-center sm:justify-start">
+              {currentLang === 'de' ? 'Entwickelt von' : currentLang === 'ar' ? 'تم التطوير بواسطة' : 'Developed by'}{' '}
+              <a 
+                href="https://data212.com/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-[#C5A059] hover:text-[#e0b96e] transition-colors font-semibold inline-flex items-center gap-0.5 underline decoration-[#C5A059]/30 hover:decoration-[#C5A059]"
+              >
+                data212
+              </a>
+            </span>
           </div>
-          <div className="flex items-center gap-6 text-white/40">
-            <span className="hover:text-[#C5A059] cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-[#C5A059] cursor-pointer">Terms of Service</span>
-            <span className="hover:text-[#C5A059] cursor-pointer">Imprint / Impressum</span>
+          <div className="flex items-center gap-6 text-white/40" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+            <button onClick={() => onOpenStaticPage('privacy')} className="hover:text-[#C5A059] transition-colors text-xs font-medium cursor-pointer bg-transparent border-none p-0 outline-none">
+              {currentLang === 'de' ? 'Datenschutzerklärung' : currentLang === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}
+            </button>
+            <button onClick={() => onOpenStaticPage('terms')} className="hover:text-[#C5A059] transition-colors text-xs font-medium cursor-pointer bg-transparent border-none p-0 outline-none">
+              {currentLang === 'de' ? 'Allgemeine Geschäftsbedingungen' : currentLang === 'ar' ? 'شروط الخدمة' : 'Terms of Service'}
+            </button>
+            <button onClick={() => onOpenStaticPage('imprint')} className="hover:text-[#C5A059] transition-colors text-xs font-medium cursor-pointer bg-transparent border-none p-0 outline-none">
+              {currentLang === 'de' ? 'Impressum' : currentLang === 'ar' ? 'بيانات الناشر' : 'Imprint / Impressum'}
+            </button>
           </div>
         </div>
 

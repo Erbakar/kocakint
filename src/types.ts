@@ -3,9 +3,39 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export type Language = 'en' | 'de' | 'ar';
+export type Language = 'en' | 'de' | 'ar' | 'tr';
 
-export type ActiveSection = 'home' | 'software' | 'trade' | 'automotive' | 'carcare' | 'admin';
+export type ActiveSection = 'home' | 'software' | 'trade' | 'automotive' | 'carcare' | 'admin' | 'rental';
+
+export interface RentalCar {
+  id: string;
+  name: string;
+  brand: string;
+  category: 'sports' | 'suv' | 'luxury';
+  image: string;
+  specs: {
+    power: string;
+    acceleration: string;
+    topSpeed: string;
+    engine: string;
+  };
+  dailyPrice: number;
+  availableWithDriver: boolean;
+  availableWithoutDriver: boolean;
+  accentColor: string;
+  description: {
+    en: string;
+    de: string;
+    ar: string;
+    tr?: string;
+  };
+}
+
+export interface CarCarePricing {
+  sedan: { ppf: number; detailing: number; wash: number };
+  suv: { ppf: number; detailing: number; wash: number };
+  sport: { ppf: number; detailing: number; wash: number };
+}
 
 export interface CarListing {
   id: string;
@@ -25,6 +55,7 @@ export interface CarListing {
     en: string;
     de: string;
     ar: string;
+    tr?: string;
   };
   specs: string[];
 }
@@ -40,6 +71,7 @@ export interface OfficeLocation {
     en: string;
     de: string;
     ar: string;
+    tr?: string;
   };
   geoCoords: string;
 }

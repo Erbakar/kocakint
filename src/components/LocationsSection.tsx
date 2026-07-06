@@ -6,7 +6,8 @@
 import React, { useState } from 'react';
 import { Language } from '../types';
 import { translations } from '../translations';
-import { MapPin, Phone, Mail, Building, Send, CheckCircle, Clock } from 'lucide-react';
+import { MapPin, Phone, Mail, Building, Send, CheckCircle, Clock, Globe } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface LocationsSectionProps {
   currentLang: Language;
@@ -36,11 +37,17 @@ export default function LocationsSection({ currentLang }: LocationsSectionProps)
   };
 
   return (
-    <section className="py-12 sm:py-16 text-[#E0E0E0] font-sans border-t border-white/10 bg-transparent" id="locations-section">
+    <section className="py-12 sm:py-16 text-[#E0E0E0] font-sans border-t border-white/10 bg-transparent animate-fadeIn" id="locations-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Intro */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        {/* Section Intro with Scroll Animation */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
           <span className="text-xs font-bold font-mono text-[#C5A059] bg-[#C5A059]/10 border border-[#C5A059]/20 px-3 py-1 rounded-sm uppercase tracking-[0.2em]">
             Operational Footprint
           </span>
@@ -50,107 +57,160 @@ export default function LocationsSection({ currentLang }: LocationsSectionProps)
           <p className="text-sm text-white/50 mt-2 font-sans">
             {t.locationsSubtitle}
           </p>
-        </div>
+        </motion.div>
 
-        {/* Bento Grid layout for Offices */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mb-16">
+        {/* Bento Grid layout for Offices with scroll animations */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch mb-16">
           
           {/* Berlin Office Detail Card */}
-          <div className="lg:col-span-6 bg-[#111111] border border-white/10 rounded-sm p-6 sm:p-8 flex flex-col justify-between shadow-xl relative overflow-hidden group hover:border-[#C5A059]/30 transition-all">
-            <div className="absolute top-0 left-0 w-1 h-full bg-[#C5A059]"></div>
+          <motion.div 
+            initial={{ opacity: 0, x: isRTL ? 40 : -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="grid grid-cols-1 sm:grid-cols-12 gap-0 overflow-hidden bg-[#111111] border border-white/10 rounded-sm shadow-2xl relative group hover:border-[#C5A059]/30 transition-all duration-300"
+          >
+            <div className="absolute top-0 left-0 w-1 h-full bg-[#C5A059] z-10"></div>
             
-            <div>
-              <div className="flex justify-between items-start mb-4">
-                <span className="bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20 text-[10px] font-mono uppercase tracking-widest font-bold px-2.5 py-1 rounded-sm">
-                  European HQ
-                </span>
+            <div className="sm:col-span-7 p-6 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <span className="bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20 text-[10px] font-mono uppercase tracking-widest font-bold px-2.5 py-1 rounded-sm">
+                    European HQ
+                  </span>
+                </div>
+                
+                <h3 className="text-xl font-serif text-white mb-2 flex items-center gap-2">
+                  <Building className="w-5 h-5 text-[#C5A059]" />
+                  Berlin Operations Center
+                </h3>
+                
+                <p className="text-xs text-white/40 leading-relaxed font-mono mb-4">
+                  Symeonstraße 10, 12279 Berlin, Germany
+                </p>
+
+                <p className="text-xs sm:text-sm text-white/60 leading-relaxed mb-6 font-sans">
+                  {t.berlinSEOText}
+                </p>
+
+                <div className="space-y-2.5 text-xs text-white/50 font-mono">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-[#C5A059]/70" />
+                    <span>TEL: <a href="tel:+493052014930" className="text-white/70 hover:text-[#C5A059]">+49 (0) 30 5201 4930</a></span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-[#C5A059]/70" />
+                    <span>EMAIL: <a href="mailto:berlin@kocakint.com" className="text-white/70 hover:text-[#C5A059]">berlin@kocakint.com</a></span>
+                  </div>
+                  <div className="flex items-center gap-2 text-[#C5A059] text-[11px] pt-1 font-sans">
+                    <Clock className="w-4 h-4" />
+                    <span>09:00 - 18:00 (CET) • Mon - Fri</span>
+                  </div>
+                </div>
               </div>
-              
-              <h3 className="text-xl font-serif text-white mb-2 flex items-center gap-2">
-                <Building className="w-5 h-5 text-[#C5A059]" />
-                Berlin Operations Center
-              </h3>
-              
-              <p className="text-xs text-white/40 leading-relaxed font-mono mb-4">
-                Symeonstraße 10, 12279 Berlin, Federal Republic of Germany
-              </p>
 
-              <p className="text-sm text-white/60 leading-relaxed mb-6 font-sans">
-                {t.berlinSEOText}
-              </p>
-
-              <div className="space-y-2.5 text-xs text-white/50 font-mono">
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-[#C5A059]/70" />
-                  <span>TEL: <a href="tel:+493052014930" className="text-white/70 hover:text-[#C5A059]">+49 (0) 30 5201 4930</a></span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-[#C5A059]/70" />
-                  <span>EMAIL: <a href="mailto:berlin@kocakint.com" className="text-white/70 hover:text-[#C5A059]">berlin@kocakint.com</a></span>
-                </div>
-                <div className="flex items-center gap-2 text-[#C5A059] text-[11px] pt-1 font-sans">
-                  <Clock className="w-4 h-4" />
-                  <span>Business Hours: 09:00 - 18:00 (CET) • Mon - Fri</span>
-                </div>
+              <div className="mt-8 pt-4 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-white/30">
+                <span className="text-[#C5A059] font-bold uppercase tracking-wider">Schengen Customs hub</span>
               </div>
             </div>
 
-            {/* Micro-map graphic silhouette */}
-            <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-white/30">
-              <span className="text-[#C5A059] font-bold uppercase tracking-wider">Schengen Customs hub</span>
+            {/* Berlin Cover Image side */}
+            <div className="sm:col-span-5 relative h-48 sm:h-auto min-h-[220px] overflow-hidden bg-[#0A0A0A]">
+              <img 
+                src="https://images.unsplash.com/photo-1599946347371-68eb71b16afc?auto=format&fit=crop&w=800&q=80" 
+                alt="Berlin Twilight" 
+                className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-70 transition-all duration-700 ease-out group-hover:scale-105"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#111111] via-transparent to-transparent"></div>
+              {/* Overlay elements */}
+              <div className="absolute bottom-4 right-4 font-mono text-[9px] bg-black/80 px-2 py-1 rounded-sm border border-white/10 text-[#C5A059]/80 flex items-center gap-1">
+                <Globe className="w-3 h-3 animate-spin" style={{ animationDuration: '20s' }} />
+                <span>52.5200° N, 13.4050° E</span>
+              </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Dubai Office Detail Card */}
-          <div className="lg:col-span-6 bg-[#111111] border border-white/10 rounded-sm p-6 sm:p-8 flex flex-col justify-between shadow-xl relative overflow-hidden group hover:border-[#C5A059]/30 transition-all">
-            <div className="absolute top-0 left-0 w-1 h-full bg-[#C5A059]"></div>
+          <motion.div 
+            initial={{ opacity: 0, x: isRTL ? -40 : 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="grid grid-cols-1 sm:grid-cols-12 gap-0 overflow-hidden bg-[#111111] border border-white/10 rounded-sm shadow-2xl relative group hover:border-[#C5A059]/30 transition-all duration-300"
+          >
+            <div className="absolute top-0 left-0 w-1 h-full bg-[#C5A059] z-10"></div>
             
-            <div>
-              <div className="flex justify-between items-start mb-4">
-                <span className="bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20 text-[10px] font-mono uppercase tracking-widest font-bold px-2.5 py-1 rounded-sm">
-                  Middle East & Asia HQ
-                </span>
+            <div className="sm:col-span-7 p-6 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <span className="bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20 text-[10px] font-mono uppercase tracking-widest font-bold px-2.5 py-1 rounded-sm">
+                    Middle East & Asia HQ
+                  </span>
+                </div>
+                
+                <h3 className="text-xl font-serif text-white mb-2 flex items-center gap-2">
+                  <Building className="w-5 h-5 text-[#C5A059]" />
+                  Dubai Regional Hub
+                </h3>
+                
+                <p className="text-xs text-white/40 leading-relaxed font-mono mb-4">
+                  Business Bay, One Central Tower, Dubai, UAE
+                </p>
+
+                <p className="text-xs sm:text-sm text-white/60 leading-relaxed mb-6 font-sans">
+                  {t.dubaiSEOText}
+                </p>
+
+                <div className="space-y-2.5 text-xs text-white/50 font-mono">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-[#C5A059]/70" />
+                    <span>TEL: <a href="tel:+97143952840" className="text-white/70 hover:text-[#C5A059]">+971 (0) 4 395 2840</a></span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-[#C5A059]/70" />
+                    <span>EMAIL: <a href="mailto:dubai@kocakint.com" className="text-white/70 hover:text-[#C5A059]">dubai@kocakint.com</a></span>
+                  </div>
+                  <div className="flex items-center gap-2 text-[#C5A059] text-[11px] pt-1 font-sans">
+                    <Clock className="w-4 h-4" />
+                    <span>08:30 - 17:30 (GST) • Mon - Fri</span>
+                  </div>
+                </div>
               </div>
-              
-              <h3 className="text-xl font-serif text-white mb-2 flex items-center gap-2">
-                <Building className="w-5 h-5 text-[#C5A059]" />
-                Dubai Regional Hub
-              </h3>
-              
-              <p className="text-xs text-white/40 leading-relaxed font-mono mb-4">
-                Business Bay, One Central Tower, Dubai, United Arab Emirates
-              </p>
 
-              <p className="text-sm text-white/60 leading-relaxed mb-6 font-sans">
-                {t.dubaiSEOText}
-              </p>
-
-              <div className="space-y-2.5 text-xs text-white/50 font-mono">
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-[#C5A059]/70" />
-                  <span>TEL: <a href="tel:+97143952840" className="text-white/70 hover:text-[#C5A059]">+971 (0) 4 395 2840</a></span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-[#C5A059]/70" />
-                  <span>EMAIL: <a href="mailto:dubai@kocakint.com" className="text-white/70 hover:text-[#C5A059]">dubai@kocakint.com</a></span>
-                </div>
-                <div className="flex items-center gap-2 text-[#C5A059] text-[11px] pt-1 font-sans">
-                  <Clock className="w-4 h-4" />
-                  <span>Business Hours: 08:30 - 17:30 (GST) • Mon - Fri</span>
-                </div>
+              <div className="mt-8 pt-4 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-white/30">
+                <span className="text-[#C5A059] font-bold uppercase tracking-wider">GCC Customs Union hub</span>
               </div>
             </div>
 
-            {/* Micro-map graphic silhouette */}
-            <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-white/30">
-              <span className="text-[#C5A059] font-bold uppercase tracking-wider">GCC Customs Union hub</span>
+            {/* Dubai Cover Image side */}
+            <div className="sm:col-span-5 relative h-48 sm:h-auto min-h-[220px] overflow-hidden bg-[#0A0A0A]">
+              <img 
+                src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80" 
+                alt="Dubai Skyline" 
+                className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-70 transition-all duration-700 ease-out group-hover:scale-105"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#111111] via-transparent to-transparent"></div>
+              {/* Overlay elements */}
+              <div className="absolute bottom-4 right-4 font-mono text-[9px] bg-black/80 px-2 py-1 rounded-sm border border-white/10 text-[#C5A059]/80 flex items-center gap-1">
+                <Globe className="w-3 h-3 animate-spin" style={{ animationDuration: '20s' }} />
+                <span>25.2048° N, 55.2708° E</span>
+              </div>
             </div>
-          </div>
+          </motion.div>
 
         </div>
 
-        {/* Global Branch Inquiry Form */}
-        <div className="bg-[#111111] border border-white/10 rounded-sm p-6 sm:p-8" id="locations-contact">
+        {/* Global Branch Inquiry Form with scroll animation */}
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="bg-[#111111] border border-white/10 rounded-sm p-6 sm:p-8" 
+          id="locations-contact"
+        >
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
             
             <div className="md:col-span-5 space-y-4">
@@ -213,7 +273,7 @@ export default function LocationsSection({ currentLang }: LocationsSectionProps)
 
                   <button
                     type="submit"
-                    className="w-full sm:w-auto bg-[#C5A059] hover:bg-[#b08e4f] text-black font-semibold text-xs uppercase tracking-widest py-3 px-8 rounded-sm transition-all shadow-md flex items-center justify-center gap-1.5 active:translate-y-0.5"
+                    className="w-full sm:w-auto bg-[#C5A059] hover:bg-[#b08e4f] text-black font-semibold text-xs uppercase tracking-widest py-3 px-8 rounded-sm transition-all shadow-md flex items-center justify-center gap-1.5 active:translate-y-0.5 cursor-pointer"
                   >
                     <span>{t.contactSubmitBtn}</span>
                     <Send className="w-3.5 h-3.5" />
@@ -223,7 +283,7 @@ export default function LocationsSection({ currentLang }: LocationsSectionProps)
             </div>
 
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </section>

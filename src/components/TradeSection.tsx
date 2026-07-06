@@ -25,7 +25,7 @@ export default function TradeSection({ currentLang }: TradeSectionProps) {
 
   return (
     <section className="py-4 text-[#E0E0E0] font-sans bg-transparent" id="trade-section">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         
         {/* Intro */}
         <div className="text-center max-w-3xl mx-auto mb-8">

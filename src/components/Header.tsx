@@ -6,7 +6,7 @@
 import React from 'react';
 import { ActiveSection, Language } from '../types';
 import { translations } from '../translations';
-import { Globe, Settings, ShieldAlert, Menu, X, Landmark, Cpu, Car, Home, Sparkles } from 'lucide-react';
+import { Globe, Settings, ShieldAlert, Menu, X, Landmark, Cpu, Car, Home, Sparkles, Key } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface HeaderProps {
@@ -35,7 +35,8 @@ export default function Header({
     { id: 'software', label: t.navSoftware, icon: Cpu },
     { id: 'trade', label: t.navTrade, icon: Landmark },
     { id: 'automotive', label: t.navAutomotive, icon: Car },
-    { id: 'carcare', label: t.navCarCare, icon: Sparkles }
+    { id: 'carcare', label: t.navCarCare, icon: Sparkles },
+    { id: 'rental', label: t.navRental, icon: Key }
   ] as const;
 
   const handleNavClick = (sectionId: ActiveSection) => {
@@ -98,7 +99,7 @@ export default function Header({
             <div className={`flex items-center border-l border-white/15 pl-4 ml-4 ${isRTL ? 'border-r border-l-0 pr-4 mr-4 border-white/15' : ''}`} style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }} id="lang-switcher">
               <Globe className="w-4 h-4 text-white/30 mr-2 ml-2" />
               <div className="flex gap-3 text-[11px] font-bold">
-                {(['en', 'de', 'ar'] as const).map((lang) => (
+                {(['en', 'de', 'ar', 'tr'] as const).map((lang) => (
                   <button
                     key={lang}
                     id={`lang-btn-${lang}`}
@@ -134,7 +135,7 @@ export default function Header({
           <div className="md:hidden flex items-center gap-3">
             {/* Simple Mobile Lang Trigger */}
             <div className="flex gap-2.5 px-3 py-1 bg-[#111] rounded border border-white/10">
-              {(['en', 'de', 'ar'] as const).map((lang) => (
+              {(['en', 'de', 'ar', 'tr'] as const).map((lang) => (
                 <button
                   key={lang}
                   onClick={() => onLangChange(lang)}

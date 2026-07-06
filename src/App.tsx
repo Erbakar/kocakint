@@ -4,9 +4,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Language, ActiveSection, CarListing } from './types';
+import { Language, ActiveSection, CarListing, RentalCar, CarCarePricing } from './types';
 import { translations } from './translations';
-import { initialVehicles } from './initialData';
+import { initialVehicles, initialRentals, initialCarCarePrices } from './initialData';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -16,8 +16,10 @@ import AutomotiveSection from './components/AutomotiveSection';
 import AdminPanel from './components/AdminPanel';
 import LocationsSection from './components/LocationsSection';
 import CarCareSection from './components/CarCareSection';
+import CarRentalSection from './components/CarRentalSection';
+import StaticPagesModal from './components/StaticPagesModal';
 
-import { Cpu, Landmark, Car, ArrowUpRight, ShieldCheck, Sparkles, Star, Anchor, ChevronDown } from 'lucide-react';
+import { Cpu, Landmark, Car, ArrowUpRight, ShieldCheck, Sparkles, Star, Anchor, ChevronDown, Key } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface PageHeroProps {
@@ -59,10 +61,14 @@ export default function App() {
   const [currentLang, setCurrentLang] = useState<Language>('en');
   const [activeSection, setActiveSection] = useState<ActiveSection>('home');
   const [listings, setListings] = useState<CarListing[]>([]);
+  const [rentals, setRentals] = useState<RentalCar[]>([]);
+  const [carCarePrices, setCarCarePrices] = useState<CarCarePricing>(initialCarCarePrices);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [activeStaticPage, setActiveStaticPage] = useState<'privacy' | 'terms' | 'imprint' | null>(null);
 
-  // Load listings from localStorage on startup, fallback to high-end initialVehicles
+  // Load state databases from localStorage on startup, fallback to high-end initial data
   useEffect(() => {
+    // 1. Vehicle Listings
     const saved = localStorage.getItem('kocakint_listings_db');
     if (saved) {
       try {
@@ -80,6 +86,32 @@ export default function App() {
     } else {
       setListings(initialVehicles);
       localStorage.setItem('kocakint_listings_db', JSON.stringify(initialVehicles));
+    }
+
+    // 2. Rental Fleet
+    const savedRentals = localStorage.getItem('kocakint_rentals_db');
+    if (savedRentals) {
+      try {
+        setRentals(JSON.parse(savedRentals) as RentalCar[]);
+      } catch (e) {
+        setRentals(initialRentals);
+      }
+    } else {
+      setRentals(initialRentals);
+      localStorage.setItem('kocakint_rentals_db', JSON.stringify(initialRentals));
+    }
+
+    // 3. Car Care Prices
+    const savedCarCare = localStorage.getItem('kocakint_carcare_prices_db');
+    if (savedCarCare) {
+      try {
+        setCarCarePrices(JSON.parse(savedCarCare) as CarCarePricing);
+      } catch (e) {
+        setCarCarePrices(initialCarCarePrices);
+      }
+    } else {
+      setCarCarePrices(initialCarCarePrices);
+      localStorage.setItem('kocakint_carcare_prices_db', JSON.stringify(initialCarCarePrices));
     }
 
     // Recover admin session if active
@@ -102,6 +134,8 @@ export default function App() {
         setActiveSection('automotive');
       } else if (hash === '#carcare' || path === '/carcare' || path.endsWith('/carcare')) {
         setActiveSection('carcare');
+      } else if (hash === '#rental' || path === '/rental' || path.endsWith('/rental')) {
+        setActiveSection('rental');
       } else if (hash === '#home' || !hash) {
         setActiveSection('home');
       }
@@ -153,6 +187,49 @@ export default function App() {
     }
   };
 
+  // Sync rentals changes back to localStorage
+  const saveRentals = (updatedRentals: RentalCar[]) => {
+    setRentals(updatedRentals);
+    localStorage.setItem('kocakint_rentals_db', JSON.stringify(updatedRentals));
+  };
+
+  // Add rental car
+  const handleAddRental = (newRentalData: Omit<RentalCar, 'id'>) => {
+    const newRental: RentalCar = {
+      id: `rental-${Date.now()}`,
+      ...newRentalData
+    };
+    const updated = [newRental, ...rentals];
+    saveRentals(updated);
+  };
+
+  // Update rental car
+  const handleUpdateRental = (updatedRental: RentalCar) => {
+    const updated = rentals.map((r) => (r.id === updatedRental.id ? updatedRental : r));
+    saveRentals(updated);
+  };
+
+  // Delete rental car
+  const handleDeleteRental = (id: string) => {
+    const confirmDelete = window.confirm(
+      currentLang === 'de' 
+        ? 'Sind Sie sicher, dass Sie dieses Mietfahrzeug löschen möchten?' 
+        : currentLang === 'ar'
+        ? 'هل أنت متأكد من رغبتك في حذف هذه السيارة المستأجرة؟'
+        : 'Are you sure you want to delete this rental car?'
+    );
+    if (confirmDelete) {
+      const updated = rentals.filter((r) => r.id !== id);
+      saveRentals(updated);
+    }
+  };
+
+  // Save Car Care prices
+  const handleUpdateCarCarePrices = (updatedPrices: CarCarePricing) => {
+    setCarCarePrices(updatedPrices);
+    localStorage.setItem('kocakint_carcare_prices_db', JSON.stringify(updatedPrices));
+  };
+
   const handleAdminLogin = () => {
     setIsAdminLoggedIn(true);
     sessionStorage.setItem('kocakint_admin_session', 'true');
@@ -186,8 +263,11 @@ export default function App() {
         : currentLang === 'ar'
         ? 'الريادة في بنيات البرمجيات للمؤسسات، نماذج الذكاء الاصطناعي، وتكامل البنى السحابية القوية.'
         : 'Leading enterprise software design, deep machine learning integration, and high-performance cloud mesh systems.',
-      color: 'border-white/10 hover:border-[#C5A059]/40',
-      badgeColor: 'bg-[#C5A059]/10 text-[#C5A059]'
+      color: 'border-white/10 hover:border-[#3b82f6]/40',
+      badgeColor: 'bg-[#3b82f6]/10 text-[#60a5fa] border border-[#3b82f6]/20',
+      accent: '#3b82f6',
+      image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80',
+      tag: '01 / SYSTEM ARCHITECTURE'
     },
     {
       id: 'trade' as const,
@@ -199,8 +279,11 @@ export default function App() {
         : currentLang === 'ar'
         ? 'إدارة التوريد والجمارك واللوجستيات عبر الحدود بين الاتحاد الأوروبي ودول مجلس التعاون الخليجي.'
         : 'Sovereign-cleared foreign commerce, multimodal freight routing, and trade compliance brokerage.',
-      color: 'border-white/10 hover:border-[#C5A059]/40',
-      badgeColor: 'bg-[#C5A059]/10 text-[#C5A059]'
+      color: 'border-white/10 hover:border-[#f59e0b]/40',
+      badgeColor: 'bg-[#f59e0b]/10 text-[#fbbf24] border border-[#f59e0b]/20',
+      accent: '#f59e0b',
+      image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80',
+      tag: '02 / SINO-GERMAN & ARAB RELATIONS'
     },
     {
       id: 'automotive' as const,
@@ -210,10 +293,13 @@ export default function App() {
       desc: currentLang === 'de'
         ? 'Direktbezug aus Deutschland, Exportlogistik und Luxusfahrzeugvermittlung.'
         : currentLang === 'ar'
-        ? 'تأمين مباشر للسيارات الفاخرة، والوساطة، وخدمات النقل العابرة للقارات.'
+        ? 'تأمين مباشر للسيارات الفاخرة، والواسطة، وخدمات النقل العابرة للقارات.'
         : 'Tier-1 German auto sourcing, luxury fleet brokerage, and unified GCC-EU shipping coordination.',
       color: 'border-white/10 hover:border-[#C5A059]/40',
-      badgeColor: 'bg-[#C5A059]/10 text-[#C5A059]'
+      badgeColor: 'bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20',
+      accent: '#C5A059',
+      image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80',
+      tag: '03 / PRESTIGE AUTOMOTIVE LEDGER'
     },
     {
       id: 'carcare' as const,
@@ -225,8 +311,27 @@ export default function App() {
         : currentLang === 'ar'
         ? 'حماية طلاء فائقة الدقة، غسيل يدوي ممتاز، وتركيب أفلام PPF الذاتية المعالجة لأرقى السيارات.'
         : 'Surgical-grade self-healing Paint Protection Film (PPF) wraps and ultra-premium detailing workflows.',
-      color: 'border-white/10 hover:border-[#C5A059]/40',
-      badgeColor: 'bg-[#C5A059]/10 text-[#C5A059]'
+      color: 'border-white/10 hover:border-[#10b981]/40',
+      badgeColor: 'bg-[#10b981]/10 text-[#34d399] border border-[#10b981]/20',
+      accent: '#10b981',
+      image: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=1200&q=80',
+      tag: '04 / NANOTECH COATINGS & DETAIL'
+    },
+    {
+      id: 'rental' as const,
+      icon: Key,
+      title: t.navRental,
+      subtitle: 'Elite Prestige Fleet',
+      desc: currentLang === 'de'
+        ? 'Exklusive Vermietung von Supersportwagen und Luxus-SUVs mit oder ohne Chauffeur.'
+        : currentLang === 'ar'
+        ? 'تأجير السيارات الرياضية الفارهة وسيارات الدفع الرباعي الفاخرة مع خيار القيادة الذاتية أو سائق خاص.'
+        : 'Elite sports exotics and commanding prestige SUVs. Sourced globally, available for self-drive or executive chauffeur.',
+      color: 'border-white/10 hover:border-[#8b5cf6]/40',
+      badgeColor: 'bg-[#8b5cf6]/10 text-[#a78bfa] border border-[#8b5cf6]/20',
+      accent: '#8b5cf6',
+      image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80',
+      tag: '05 / EXOTIC TRANSIT MANAGEMENT'
     }
   ];
 
@@ -235,8 +340,10 @@ export default function App() {
       { id: 'home', title: t.navHome, desc: currentLang === 'de' ? 'Zurück zur Startseite.' : currentLang === 'ar' ? 'العودة إلى الصفحة الرئيسية.' : 'Return to corporate consortium hub.' },
       { id: 'software', title: t.navSoftware, desc: currentLang === 'de' ? 'Maßgeschneiderte Software und KI-Engineering.' : currentLang === 'ar' ? 'برمجيات مخصصة وهندسة الذكاء الاصطناعي.' : 'Custom enterprise software and AI engineering.' },
       { id: 'trade', title: t.navTrade, desc: currentLang === 'de' ? 'Internationale Beziehungen & Außenhandel.' : currentLang === 'ar' ? 'العلاقات الدولية والتجارة والامتثال.' : 'Seamless transnational logistics & compliance.' },
-      { id: 'automotive', title: t.navAutomotive, desc: currentLang === 'de' ? 'Fahrzeugvermittlung & Import-Export.' : currentLang === 'ar' ? 'وساطة السيارات الفاخرة واللوجستيات.' : 'Premium German & GCC vehicle sourcing.' }
-    ].filter(item => item.id !== currentId);
+      { id: 'automotive', title: t.navAutomotive, desc: currentLang === 'de' ? 'Fahrzeugvermittlung & Import-Export.' : currentLang === 'ar' ? 'وساطة السيارات الفاخرة واللوجستيات.' : 'Premium German & GCC vehicle sourcing.' },
+      { id: 'carcare', title: t.navCarCare, desc: currentLang === 'de' ? 'Fahrzeugpflege & Lackschutz-Zentrum.' : currentLang === 'ar' ? 'العناية بالسيارات وحماية الطلاء.' : 'Prestige detailing & PPF shield services.' },
+      { id: 'rental', title: t.navRental, desc: currentLang === 'de' ? 'Exklusive Sportwagen-Vermietung.' : currentLang === 'ar' ? 'تأجير السيارات الرياضية والفاخرة.' : 'Prestige exotic rentals & chauffeured transit.' }
+    ].filter(item => item.id !== currentId).slice(0, 3);
 
     return (
       <div className="mt-16 pt-12 border-t border-white/10" id="division-footer-nav">
@@ -364,38 +471,74 @@ export default function App() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {divisionFeatures.map((div) => {
+                <div className="space-y-12 sm:space-y-16">
+                  {divisionFeatures.map((div, idx) => {
                     const DivIcon = div.icon;
+                    const isEven = idx % 2 === 0;
                     return (
-                      <div 
+                      <motion.div 
                         key={div.id}
                         id={`division-card-${div.id}`}
                         onClick={() => handleSectionChange(div.id)}
-                        className="group bg-[#111111] border border-white/10 hover:border-[#C5A059]/40 rounded-sm p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-[0_4px_30px_rgba(197,160,89,0.03)] cursor-pointer"
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.7, ease: "easeOut" }}
+                        className="group bg-[#111111] border border-white/10 hover:border-white/20 rounded-sm overflow-hidden transition-all duration-500 hover:shadow-[0_12px_45px_rgba(0,0,0,0.8)] cursor-pointer grid grid-cols-1 lg:grid-cols-12"
                       >
-                        <div>
-                          <div className="flex items-center justify-between mb-6">
-                            <div className="p-3.5 rounded-sm bg-[#0A0A0A] border border-white/10 text-[#C5A059] group-hover:bg-[#C5A059] group-hover:text-black group-hover:border-[#C5A059] transition-all duration-300">
-                              <DivIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </div>
-                            <span className="text-[10px] font-mono tracking-widest text-[#C5A059] uppercase font-bold">{div.subtitle}</span>
+                        {/* Image Column */}
+                        <div className={`lg:col-span-6 relative h-64 sm:h-80 lg:h-auto overflow-hidden bg-[#0A0A0A] ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
+                          <img 
+                            src={div.image} 
+                            alt={div.title}
+                            className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-85 transition-all duration-1000 ease-out group-hover:scale-105"
+                            referrerPolicy="no-referrer"
+                          />
+                          {/* Rich linear mask for transitions */}
+                          <div className={`absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#111111] via-transparent to-transparent ${isEven ? 'lg:bg-gradient-to-r' : 'lg:bg-gradient-to-l'}`}></div>
+                          
+                          {/* Accent Glow Line inside the image */}
+                          <div className="absolute top-0 left-0 w-full h-1 lg:w-1 lg:h-full transition-all duration-500" style={{ backgroundColor: div.accent }}></div>
+                          
+                          {/* Floating Badge Tag */}
+                          <div className="absolute bottom-4 left-4 font-mono text-[9px] tracking-widest bg-black/80 px-2.5 py-1.5 rounded-sm border border-white/10 text-white/50 group-hover:text-white transition-colors">
+                            {div.tag}
                           </div>
-                          
-                          <h3 className="text-xl font-serif text-white group-hover:text-[#C5A059] transition-colors mb-4">
-                            {div.title}
-                          </h3>
-                          
-                          <p className="text-xs sm:text-sm text-white/50 leading-relaxed font-sans mb-8">
-                            {div.desc}
-                          </p>
                         </div>
 
-                        <div className="flex items-center gap-2 text-xs font-mono text-[#C5A059] tracking-wider uppercase font-semibold group-hover:translate-x-1.5 transition-transform" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
-                          <span>{currentLang === 'de' ? 'Portal betreten' : currentLang === 'ar' ? 'دخول البوابة' : 'Enter Division Portal'}</span>
-                          <ArrowUpRight className="w-4 h-4" />
+                        {/* Text Details Column */}
+                        <div className={`lg:col-span-6 p-6 sm:p-10 lg:p-12 flex flex-col justify-between ${isEven ? 'lg:order-2' : 'lg:order-1'}`} style={{ textAlign: isRTL ? 'right' : 'left' }}>
+                          <div>
+                            <div className="flex items-center gap-3 mb-6" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                              <div 
+                                className="p-3 rounded-sm bg-[#0A0A0A] border border-white/10 transition-all duration-500 group-hover:scale-115 text-white/70"
+                                style={{ 
+                                  '--hover-accent': div.accent 
+                                } as React.CSSProperties}
+                              >
+                                <DivIcon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: div.accent }} />
+                              </div>
+                              <div>
+                                <span className="text-[10px] font-mono tracking-[0.2em] uppercase font-bold block" style={{ color: div.accent }}>{div.subtitle}</span>
+                                <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Division operational node</span>
+                              </div>
+                            </div>
+                            
+                            <h3 className="text-2xl sm:text-3xl font-serif text-white group-hover:text-[#C5A059] transition-colors mb-4 tracking-tight">
+                              {div.title}
+                            </h3>
+                            
+                            <p className="text-xs sm:text-sm text-white/50 leading-relaxed font-sans mb-8">
+                              {div.desc}
+                            </p>
+                          </div>
+
+                          <div className="flex items-center gap-2.5 text-xs font-mono text-[#C5A059] tracking-widest uppercase font-bold group-hover:translate-x-2 transition-transform" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                            <span>{currentLang === 'de' ? 'Portal betreten' : currentLang === 'ar' ? 'دخول البوابة' : 'Enter Division Portal'}</span>
+                            <ArrowUpRight className="w-4 h-4 text-[#C5A059]" />
+                          </div>
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
@@ -575,11 +718,55 @@ export default function App() {
 
               {/* Dedicated Page View Content */}
               <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
-                <CarCareSection currentLang={currentLang} />
+                <CarCareSection currentLang={currentLang} pricingData={carCarePrices} />
               </div>
 
               {/* Portal Footer Navigator */}
               {renderDivisionFooter('carcare')}
+            </motion.div>
+          )}
+
+          {activeSection === 'rental' && (
+            <motion.div
+              key="rental"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.25 }}
+              id="rental-page-view"
+              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16"
+            >
+              {/* Breadcrumbs */}
+              <div className="flex items-center gap-2 text-xs font-mono mb-8 text-white/40" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                <button onClick={() => handleSectionChange('home')} className="hover:text-white transition-colors">{t.navHome.toUpperCase()}</button>
+                <span>/</span>
+                <span className="text-[#C5A059]">{t.navRental.toUpperCase()}</span>
+              </div>
+
+              {/* Elegant Section Hero Image */}
+              <PageHero 
+                image="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80"
+                deptLabel={
+                  currentLang === 'de' ? 'ABTEILUNG 05 // EXKLUSIVE PRESTIGE-VERMIETUNG' :
+                  currentLang === 'ar' ? 'القسم ٠٥ // أسطول تأجير السيارات الفارهة للمحترفين' :
+                  'DEPT_05 // PRESTIGE FLEET RENTALS'
+                }
+                title={t.navRental}
+                description={
+                  currentLang === 'de' ? 'Erleben Sie unübertroffene Leistung und exquisite Ingenieurskunst mit unserer Flotte modernster Supersportwagen und Luxus-SUVs.' :
+                  currentLang === 'ar' ? 'استمتع بأعلى مستويات الرفاهية والأداء الخارق مع أسطولنا الحصري من السيارات الرياضية الخارقة وسيارات الدفع الرباعي الفاخرة.' :
+                  'Experience unrivaled high-performance and exquisite automotive engineering with our hand-selected fleet of supercars and elite luxury SUVs.'
+                }
+                isRTL={isRTL}
+              />
+
+              {/* Dedicated Page View Content */}
+              <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
+                <CarRentalSection currentLang={currentLang} rentals={rentals} />
+              </div>
+
+              {/* Portal Footer Navigator */}
+              {renderDivisionFooter('rental')}
             </motion.div>
           )}
 
@@ -622,6 +809,12 @@ export default function App() {
                 onAddCar={handleAddCar}
                 onUpdateCar={handleUpdateCar}
                 onDeleteCar={handleDeleteCar}
+                rentals={rentals}
+                onAddRental={handleAddRental}
+                onUpdateRental={handleUpdateRental}
+                onDeleteRental={handleDeleteRental}
+                carCarePrices={carCarePrices}
+                onUpdateCarCarePrices={handleUpdateCarCarePrices}
                 isLoggedIn={isAdminLoggedIn}
                 onLoginSuccess={handleAdminLogin}
                 onLogout={handleAdminLogout}
@@ -633,7 +826,15 @@ export default function App() {
       </main>
 
       {/* Dynamic Footer Component */}
-      <Footer currentLang={currentLang} />
+      <Footer currentLang={currentLang} onOpenStaticPage={(page) => setActiveStaticPage(page)} />
+
+      {/* Static Info Legal Pages */}
+      <StaticPagesModal
+        isOpen={!!activeStaticPage}
+        page={activeStaticPage}
+        onClose={() => setActiveStaticPage(null)}
+        currentLang={currentLang}
+      />
     </div>
   );
 }
