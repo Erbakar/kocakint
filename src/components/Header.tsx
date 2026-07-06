@@ -8,6 +8,7 @@ import { ActiveSection, Language } from '../types';
 import { translations } from '../translations';
 import { Globe, Settings, ShieldAlert, Menu, X, Landmark, Cpu, Car, Home, Sparkles, Key } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import LuxuryLogo from './LuxuryLogo';
 
 interface HeaderProps {
   currentLang: Language;
@@ -50,13 +51,12 @@ export default function Header({
         <div className="flex items-center justify-between h-20">
           
           {/* Logo Brand area */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleNavClick('home')} id="header-brand-logo">
-            <div className="w-10 h-10 border-2 border-[#C5A059] flex items-center justify-center rotate-45 mr-1 ml-1 transition-transform hover:rotate-135 duration-500">
-              <span className="-rotate-45 font-serif text-xl font-bold text-[#C5A059]">K</span>
-            </div>
+          <div className="flex items-center gap-3 cursor-pointer select-none" onClick={() => handleNavClick('home')} id="header-brand-logo">
+            <LuxuryLogo size={42} className="mr-1 ml-1" />
             <div className="flex flex-col">
-              <span className="text-xl sm:text-2xl font-serif tracking-widest uppercase text-white font-medium">
-                {t.brandName}
+              <span className="text-xl sm:text-2xl font-serif tracking-widest uppercase">
+                <span className="text-white font-extrabold">KOCAK</span>
+                <span className="text-[#C5A059] font-light">INT</span>
               </span>
               <span className="text-[9px] font-mono tracking-[0.25em] text-[#C5A059] uppercase">
                 berlin &bull; dubai

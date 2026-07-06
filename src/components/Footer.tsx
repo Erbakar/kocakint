@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Language } from '../types';
 import { translations } from '../translations';
 import { Clock, MapPin, Phone, Mail, Globe2, Sparkles, CheckCircle2, ChevronRight } from 'lucide-react';
+import LuxuryLogo from './LuxuryLogo';
 
 interface FooterProps {
   currentLang: Language;
@@ -96,12 +97,18 @@ export default function Footer({ currentLang, onOpenStaticPage }: FooterProps) {
     <footer className="bg-[#050505] border-t border-white/10 text-white/70 py-8 px-4 sm:px-6 lg:px-8 font-sans" id="kocakint-footer">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          
           {/* Brand Info */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-serif uppercase tracking-widest text-white font-bold">{t.brandName}</span>
-              <span className="text-[10px] bg-[#C5A059]/10 text-[#C5A059] px-2 py-0.5 rounded-sm border border-[#C5A059]/25 uppercase tracking-wider font-semibold">GLOBAL HUB</span>
+            <div className="flex items-center gap-3">
+              <LuxuryLogo size={36} />
+              <div className="flex flex-col">
+                <span className="text-lg font-serif uppercase tracking-widest">
+                  <span className="text-white font-extrabold">KOCAK</span>
+                  <span className="text-[#C5A059] font-light">INT</span>
+                </span>
+                <span className="text-[8px] text-white/40 tracking-wider font-mono">BERLIN &bull; DUBAI</span>
+              </div>
+              <span className="text-[10px] bg-[#C5A059]/10 text-[#C5A059] px-2 py-0.5 rounded-sm border border-[#C5A059]/25 uppercase tracking-wider font-semibold self-center ml-2">GLOBAL HUB</span>
             </div>
             <p className="text-xs leading-relaxed text-white/50 max-w-sm">
               {t.tagline}
