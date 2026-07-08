@@ -18,8 +18,9 @@ import LocationsSection from './components/LocationsSection';
 import CarCareSection from './components/CarCareSection';
 import CarRentalSection from './components/CarRentalSection';
 import StaticPagesModal from './components/StaticPagesModal';
+import CorporateSections from './components/CorporateSections';
 
-import { Cpu, Landmark, Car, ArrowUpRight, ShieldCheck, Sparkles, Star, Anchor, ChevronDown, Key, Play, Pause } from 'lucide-react';
+import { Cpu, Landmark, Car, ArrowUpRight, ShieldCheck, Sparkles, ChevronDown, Key, Building2, Globe2, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface PageHeroProps {
@@ -28,30 +29,41 @@ interface PageHeroProps {
   title: string;
   description: string;
   isRTL: boolean;
+  highlights?: string[];
 }
 
-function PageHero({ image, deptLabel, title, description, isRTL }: PageHeroProps) {
+function PageHero({ image, deptLabel, title, description, isRTL, highlights = [] }: PageHeroProps) {
   return (
-    <div className="relative h-64 sm:h-80 w-full overflow-hidden rounded-sm border border-white/10 mb-8 flex flex-col justify-end p-6 sm:p-10 bg-[#0A0A0A]">
+    <div className="relative h-80 sm:h-[440px] w-full overflow-hidden rounded-sm border border-white/10 mb-10 flex flex-col justify-end bg-[#0A0A0A]">
       <img 
         src={image} 
         alt={title} 
-        className="absolute inset-0 w-full h-full object-cover opacity-25 hover:scale-105 transition-transform duration-10000 ease-out"
+        className="absolute inset-0 w-full h-full object-cover opacity-40"
         referrerPolicy="no-referrer"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/70 to-transparent"></div>
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A]/90 via-[#0A0A0A]/30 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/60 to-[#0A0A0A]/30"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A]/80 via-[#0A0A0A]/20 to-transparent"></div>
       
-      <div className="relative z-10 text-left" style={{ textAlign: isRTL ? 'right' : 'left' }}>
-        <span className="text-[10px] font-mono uppercase text-[#C5A059] tracking-[0.25em] font-extrabold block mb-2">
+      <div className="relative z-10 p-6 sm:p-10 lg:p-12 max-w-4xl" style={{ textAlign: isRTL ? 'right' : 'left' }}>
+        <span className="inline-block text-xs font-mono uppercase text-[#C5A059] tracking-[0.2em] font-semibold mb-4 bg-[#C5A059]/10 border border-[#C5A059]/20 px-3 py-1 rounded-sm">
           {deptLabel}
         </span>
-        <h1 className="text-2xl sm:text-3xl font-serif text-white leading-tight font-normal">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white leading-tight font-medium mb-4">
           {title}
         </h1>
-        <p className="text-xs sm:text-sm text-white/50 mt-2 font-sans max-w-2xl leading-relaxed">
+        <p className="text-sm sm:text-base text-white/60 max-w-2xl leading-relaxed font-sans">
           {description}
         </p>
+        {highlights.length > 0 && (
+          <div className="flex flex-wrap gap-3 mt-6" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+            {highlights.map((item, idx) => (
+              <span key={idx} className="inline-flex items-center gap-1.5 text-xs text-white/70 bg-white/5 border border-white/10 px-3 py-1.5 rounded-sm">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#C5A059]" />
+                {item}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -67,18 +79,6 @@ export default function App() {
   const [activeStaticPage, setActiveStaticPage] = useState<'privacy' | 'terms' | 'imprint' | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-
-  const toggleVideoPlayback = () => {
-    if (videoRef.current) {
-      if (isVideoPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play().catch((err) => console.log('Video play error:', err));
-      }
-      setIsVideoPlaying(!isVideoPlaying);
-    }
-  };
 
   // Load state databases from localStorage on startup, fallback to high-end initial data
   useEffect(() => {
@@ -201,7 +201,6 @@ export default function App() {
           if (videoRef.current) {
             videoRef.current.muted = true;
             await videoRef.current.play();
-            setIsVideoPlaying(true);
           }
         } catch (err) {
           console.log('Autoplay forced playback helper triggered:', err);
@@ -331,7 +330,8 @@ export default function App() {
       badgeColor: 'bg-[#3b82f6]/10 text-[#60a5fa] border border-[#3b82f6]/20',
       accent: '#3b82f6',
       image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80',
-      tag: '01 / SYSTEM ARCHITECTURE'
+      tag: '01 / SYSTEM ARCHITECTURE',
+      services: ['Enterprise SaaS', 'AI / ML Integration', 'Cloud Infrastructure']
     },
     {
       id: 'trade' as const,
@@ -347,7 +347,8 @@ export default function App() {
       badgeColor: 'bg-[#f59e0b]/10 text-[#fbbf24] border border-[#f59e0b]/20',
       accent: '#f59e0b',
       image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80',
-      tag: '02 / SINO-GERMAN & ARAB RELATIONS'
+      tag: '02 / SINO-GERMAN & ARAB RELATIONS',
+      services: ['Customs Clearance', 'Freight Logistics', 'Trade Compliance']
     },
     {
       id: 'automotive' as const,
@@ -363,7 +364,8 @@ export default function App() {
       badgeColor: 'bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20',
       accent: '#C5A059',
       image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80',
-      tag: '03 / PRESTIGE AUTOMOTIVE LEDGER'
+      tag: '03 / PRESTIGE AUTOMOTIVE LEDGER',
+      services: ['Vehicle Sourcing', 'Import / Export', 'Fleet Brokerage']
     },
     {
       id: 'carcare' as const,
@@ -379,7 +381,8 @@ export default function App() {
       badgeColor: 'bg-[#10b981]/10 text-[#34d399] border border-[#10b981]/20',
       accent: '#10b981',
       image: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=1200&q=80',
-      tag: '04 / NANOTECH COATINGS & DETAIL'
+      tag: '04 / NANOTECH COATINGS & DETAIL',
+      services: ['PPF Protection', 'Ceramic Coating', 'Premium Detailing']
     },
     {
       id: 'rental' as const,
@@ -395,7 +398,8 @@ export default function App() {
       badgeColor: 'bg-[#8b5cf6]/10 text-[#a78bfa] border border-[#8b5cf6]/20',
       accent: '#8b5cf6',
       image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80',
-      tag: '05 / EXOTIC TRANSIT MANAGEMENT'
+      tag: '05 / EXOTIC TRANSIT MANAGEMENT',
+      services: ['Supercar Rental', 'Chauffeur Service', 'Event Fleet']
     }
   ];
 
@@ -471,9 +475,8 @@ export default function App() {
               transition={{ duration: 0.25 }}
               id="home-page-view"
             >
-              {/* Hero Banner Grid */}
-              <div className="relative py-16 sm:py-24 overflow-hidden border-b border-white/10" id="hero-banner">
-                {/* Ambient luxury automotive video loop background */}
+              {/* Hero Banner */}
+              <div className="relative min-h-[85vh] flex items-center overflow-hidden border-b border-white/10" id="hero-banner">
                 <div className="absolute inset-0 w-full h-full overflow-hidden">
                   <video
                     ref={videoRef}
@@ -482,73 +485,104 @@ export default function App() {
                     loop
                     muted
                     playsInline
-                    className="w-full h-full object-cover opacity-50 transition-opacity duration-1000"
+                    className="w-full h-full object-cover opacity-55"
                     onCanPlay={(e) => {
                       e.currentTarget.play().catch((err) => console.log('Video autoplay failed:', err));
                     }}
                   />
-                  {/* Overlay shadow gradient to maintain text contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/35 to-[#0A0A0A] pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/50 to-[#0A0A0A]/70 pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A]/60 via-transparent to-[#0A0A0A]/40 pointer-events-none"></div>
                 </div>
 
-              
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-20 sm:py-28">
+                  <div className="max-w-3xl">
+                    <div className="inline-flex items-center gap-2 bg-[#111111]/80 backdrop-blur-sm border border-white/10 rounded-sm px-4 py-2 text-xs font-mono text-[#C5A059] mb-8 uppercase tracking-widest">
+                      <Building2 className="w-4 h-4" />
+                      <span>Berlin & Dubai · Est. 2009</span>
+                    </div>
 
-                {/* Dynamic futuristic grid background design */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-50"></div>
-                <div className="absolute top-20 left-10 w-96 h-96 bg-[#C5A059]/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }}></div>
-                <div className="absolute bottom-10 right-10 w-96 h-96 bg-white/3 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s' }}></div>
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif tracking-tight text-white leading-[1.1] mb-6">
+                      {t.heroTitle}
+                    </h1>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-                  
-                  {/* Small tag */}
-                  <div className="inline-flex items-center gap-1.5 bg-[#111111] border border-white/10 rounded-full px-3.5 py-1 text-xs font-mono text-[#C5A059] mb-6">
-                    <Sparkles className="w-3.5 h-3.5 text-[#C5A059] animate-spin" style={{ animationDuration: '10s' }} />
-                    <span>Berlin • Dubai Corporate Consortium</span>
+                    <p className="text-base sm:text-lg text-white/65 leading-relaxed font-sans max-w-2xl mb-10">
+                      {t.heroSubtitle}
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-4 mb-12">
+                      <a
+                        href="#divisions-overview"
+                        className="bg-[#C5A059] hover:bg-[#b08e4f] text-black font-semibold text-xs uppercase tracking-widest py-3.5 px-10 rounded-sm transition-all shadow-lg"
+                      >
+                        {t.exploreDivisions}
+                      </a>
+                      <a
+                        href="#locations-section"
+                        className="bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-xs uppercase tracking-widest py-3.5 px-10 rounded-sm transition-all"
+                      >
+                        {t.getInTouch}
+                      </a>
+                    </div>
+
+                    <div className="flex flex-wrap gap-6 text-sm text-white/50">
+                      <div className="flex items-center gap-2">
+                        <Globe2 className="w-4 h-4 text-[#C5A059]" />
+                        <span>EU & GCC Operations</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-[#C5A059]" />
+                        <span>5 Business Divisions</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4 text-[#C5A059]" />
+                        <span>ISO · GDPR · DMCC</span>
+                      </div>
+                    </div>
                   </div>
-
-                  {/* Main Header */}
-                  <h1 className="text-4xl sm:text-6xl font-serif tracking-normal text-white max-w-4xl mx-auto leading-[1.15]">
-                    {t.heroTitle}
-                  </h1>
-
-                  <p className="text-base sm:text-lg text-white/60 mt-6 max-w-2xl mx-auto leading-relaxed font-sans">
-                    {t.heroSubtitle}
-                  </p>
-
-                  {/* Actions row */}
-                  <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
-                    <a
-                      href="#divisions-overview"
-                      className="bg-[#C5A059] hover:bg-[#b08e4f] text-black font-semibold text-xs uppercase tracking-widest py-3 px-8 rounded-sm transition-all shadow-md active:translate-y-0.5"
-                    >
-                      {t.exploreDivisions}
-                    </a>
-                    <a
-                      href="#locations-section"
-                      className="bg-transparent hover:bg-white/5 border border-white/20 text-white font-semibold text-xs uppercase tracking-widest py-3 px-8 rounded-sm transition-all flex items-center gap-1.5"
-                    >
-                      <span>{t.getInTouch}</span>
-                    </a>
-                  </div>
-
                 </div>
+
+                <a href="#corporate-stats" className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/30 hover:text-[#C5A059] transition-colors">
+                  <span className="text-[10px] font-mono uppercase tracking-widest">Scroll</span>
+                  <ChevronDown className="w-5 h-5 animate-scroll-hint" />
+                </a>
               </div>
 
-              {/* Dynamic Corporate Divisions Grid */}
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 border-b border-white/5" id="divisions-overview">
-                <div className="text-center max-w-xl mx-auto mb-16">
-                  <span className="text-xs font-bold font-mono text-[#C5A059] uppercase tracking-[0.2em] block mb-2">Corporate Portfolio</span>
-                  <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight">Kocakint Business Divisions</h2>
-                  <p className="text-xs text-white/50 mt-2">
-                    {currentLang === 'de' 
-                      ? 'Wählen Sie einen Geschäftsbereich aus, um das jeweilige Portal zu betreten.' 
-                      : currentLang === 'ar' 
-                      ? 'اختر قطاعاً تجارياً للدخول إلى البوابة المخصصة له.' 
-                      : 'Select a business division below to enter its dedicated operational portal.'}
-                  </p>
+              {/* Corporate content sections */}
+              <CorporateSections currentLang={currentLang} onSectionChange={handleSectionChange} />
+
+              {/* Corporate Divisions */}
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 border-b border-white/5" id="divisions-overview">
+                <div className="mb-16">
+                  <span className="section-label">Corporate Portfolio</span>
+                  <div className="gold-accent-line" />
+                  <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                    <div>
+                      <h2 className="section-title">Kocakint Business Divisions</h2>
+                      <p className="section-subtitle mt-4">
+                        {currentLang === 'de' 
+                          ? 'Fünf spezialisierte Geschäftsbereiche unter einem Dach — von Enterprise-Software bis zur Premium-Automobilvermittlung.' 
+                          : currentLang === 'ar' 
+                          ? 'خمسة قطاعات أعمال متخصصة تحت سقف واحد — من برمجيات المؤسسات إلى وساطة السيارات الفاخرة.' 
+                          : currentLang === 'tr'
+                          ? 'Tek çatı altında beş uzmanlaşmış iş kolu — kurumsal yazılımdan premium otomotiv brokerliğine.'
+                          : 'Five specialized business divisions under one roof — from enterprise software to premium automotive brokerage.'}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-6 text-sm shrink-0">
+                      <div className="text-center">
+                        <p className="corp-stat-value text-2xl">5</p>
+                        <p className="text-[10px] text-white/40 uppercase tracking-wider mt-1">Divisions</p>
+                      </div>
+                      <div className="w-px h-10 bg-white/10" />
+                      <div className="text-center">
+                        <p className="corp-stat-value text-2xl">2</p>
+                        <p className="text-[10px] text-white/40 uppercase tracking-wider mt-1">Hubs</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-12 sm:space-y-16">
+                <div className="space-y-8">
                   {divisionFeatures.map((div, idx) => {
                     const DivIcon = div.icon;
                     const isEven = idx % 2 === 0;
@@ -557,62 +591,58 @@ export default function App() {
                         key={div.id}
                         id={`division-card-${div.id}`}
                         onClick={() => handleSectionChange(div.id)}
-                        initial={{ opacity: 0, y: 50 }}
+                        initial={{ opacity: 0, y: 40 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.7, ease: "easeOut" }}
-                        className="group bg-[#111111] border border-white/10 hover:border-white/20 rounded-sm overflow-hidden transition-all duration-500 hover:shadow-[0_12px_45px_rgba(0,0,0,0.8)] cursor-pointer grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 md:h-[350px] lg:h-[350px]"
+                        viewport={{ once: true, margin: "-80px" }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        className="group corp-card corp-card-hover overflow-hidden cursor-pointer grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 md:min-h-[380px]"
                       >
-                        {/* Image Column */}
-                        <div className={`md:col-span-6 lg:col-span-6 relative h-64 sm:h-80 md:h-full lg:h-full overflow-hidden bg-[#0A0A0A] ${isEven ? 'md:order-1 lg:order-1' : 'md:order-2 lg:order-2'}`}>
+                        <div className={`md:col-span-5 lg:col-span-5 relative h-64 md:h-full overflow-hidden bg-[#0A0A0A] ${isEven ? 'md:order-1' : 'md:order-2'}`}>
                            <img 
                             src={div.image} 
                             alt={div.title}
-                            className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-85 transition-all duration-1000 ease-out group-hover:scale-105"
+                            className="w-full h-full object-cover opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700 ease-out"
                             referrerPolicy="no-referrer"
                           />
-                          {/* Rich linear mask for transitions */}
-                          <div className={`absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r lg:bg-gradient-to-r from-[#111111] via-transparent to-transparent ${isEven ? 'md:bg-gradient-to-r lg:bg-gradient-to-r' : 'md:bg-gradient-to-l lg:bg-gradient-to-l'}`}></div>
-                          
-                          {/* Accent Glow Line inside the image */}
-                          <div className="absolute top-0 left-0 w-full h-1 lg:w-1 lg:h-full transition-all duration-500" style={{ backgroundColor: div.accent }}></div>
-                          
-                          {/* Floating Badge Tag */}
-                          <div className="absolute bottom-4 left-4 font-mono text-[9px] tracking-widest bg-black/80 px-2.5 py-1.5 rounded-sm border border-white/10 text-white/50 group-hover:text-white transition-colors">
+                          <div className={`absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#111111] via-[#111111]/30 to-transparent ${isEven ? '' : 'md:bg-gradient-to-l'}`}></div>
+                          <div className="absolute top-0 left-0 w-full h-1 transition-all duration-500" style={{ backgroundColor: div.accent }}></div>
+                          <div className="absolute bottom-5 left-5 font-mono text-[10px] tracking-widest bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-sm border border-white/10 text-white/70">
                             {div.tag}
                           </div>
                         </div>
 
-                        {/* Text Details Column */}
-                        <div className={`md:col-span-6 lg:col-span-6 p-6 sm:p-10 md:p-10 lg:p-10 flex flex-col justify-between h-full ${isEven ? 'md:order-2 lg:order-2' : 'md:order-1 lg:order-1'}`} style={{ textAlign: isRTL ? 'right' : 'left' }}>
+                        <div className={`md:col-span-7 lg:col-span-7 p-8 sm:p-10 flex flex-col justify-between ${isEven ? 'md:order-2' : 'md:order-1'}`} style={{ textAlign: isRTL ? 'right' : 'left' }}>
                           <div>
-                            <div className="flex items-center gap-3 mb-6" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
-                              <div 
-                                className="p-3 rounded-sm bg-[#0A0A0A] border border-white/10 transition-all duration-500 group-hover:scale-115 text-white/70"
-                                style={{ 
-                                  '--hover-accent': div.accent 
-                                } as React.CSSProperties}
-                              >
-                                <DivIcon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: div.accent }} />
+                            <div className="flex items-center gap-3 mb-5" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                              <div className="p-3 rounded-sm bg-[#0A0A0A] border border-white/10">
+                                <DivIcon className="w-5 h-5" style={{ color: div.accent }} />
                               </div>
-                              <div>
-                                <span className="text-[10px] font-mono tracking-[0.2em] uppercase font-bold block" style={{ color: div.accent }}>{div.subtitle}</span>
-                                <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Division operational node</span>
-                              </div>
+                              <span className="text-xs font-mono tracking-wider uppercase font-semibold" style={{ color: div.accent }}>{div.subtitle}</span>
                             </div>
                             
-                            <h3 className="text-2xl sm:text-3xl font-serif text-white group-hover:text-[#C5A059] transition-colors mb-4 tracking-tight">
+                            <h3 className="text-2xl sm:text-3xl font-serif text-white group-hover:text-[#C5A059] transition-colors mb-4">
                               {div.title}
                             </h3>
                             
-                            <p className="text-xs sm:text-sm text-white/50 leading-relaxed font-sans mb-8">
+                            <p className="text-sm text-white/55 leading-relaxed mb-6">
                               {div.desc}
                             </p>
+
+                            <div className="flex flex-wrap gap-2 mb-6" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                              {div.services.map((service, sIdx) => (
+                                <span key={sIdx} className="text-xs text-white/60 bg-white/5 border border-white/10 px-3 py-1.5 rounded-sm">
+                                  {service}
+                                </span>
+                              ))}
+                            </div>
                           </div>
 
-                          <div className="flex items-center gap-2.5 text-xs font-mono text-[#C5A059] tracking-widest uppercase font-bold group-hover:translate-x-2 transition-transform" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
-                            <span>{currentLang === 'de' ? 'Portal betreten' : currentLang === 'ar' ? 'دخول البوابة' : 'Enter Division Portal'}</span>
-                            <ArrowUpRight className="w-4 h-4 text-[#C5A059]" />
+                          <div className="flex items-center justify-between pt-5 border-t border-white/10">
+                            <span className="text-xs font-semibold text-[#C5A059] uppercase tracking-wider group-hover:translate-x-1 transition-transform inline-flex items-center gap-2" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                              {currentLang === 'de' ? 'Portal betreten' : currentLang === 'ar' ? 'دخول البوابة' : currentLang === 'tr' ? 'Portala Git' : 'Enter Division Portal'}
+                              <ArrowUpRight className="w-4 h-4" />
+                            </span>
+                            <span className="text-[10px] font-mono text-white/25 uppercase">0{idx + 1}</span>
                           </div>
                         </div>
                       </motion.div>
@@ -648,9 +678,10 @@ export default function App() {
               <PageHero 
                 image="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80"
                 deptLabel={
-                  currentLang === 'de' ? 'ABTEILUNG 01 // BERLINER TECH HUB' :
-                  currentLang === 'ar' ? 'القسم ٠١ // مركز برلين للتكنولوجيا' :
-                  'DEPT_01 // BERLIN TECH HUB'
+                  currentLang === 'de' ? 'Abteilung 01 · Berlin Tech Hub' :
+                  currentLang === 'ar' ? 'القسم ٠١ · مركز برلين للتكنولوجيا' :
+                  currentLang === 'tr' ? 'Bölüm 01 · Berlin Teknoloji Merkezi' :
+                  'Division 01 · Berlin Tech Hub'
                 }
                 title={t.navSoftware}
                 description={
@@ -658,11 +689,11 @@ export default function App() {
                   currentLang === 'ar' ? 'الريادة في بنيات البرمجيات للمؤسسات، نماذج الذكاء الاصطناعي، وتكامل البنى السحابية القوية.' :
                   'Enterprise-grade software architectures, specialized AI/ML model deployment, and highly resilient cloud orchestration.'
                 }
+                highlights={['GDPR Compliant', '99.99% SLA', 'AI / ML Ready']}
                 isRTL={isRTL}
               />
 
-              {/* Dedicated Page View Content */}
-              <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
+              <div className="corp-card p-6 sm:p-10">
                 <SoftwareSection currentLang={currentLang} />
               </div>
 
@@ -692,9 +723,10 @@ export default function App() {
               <PageHero 
                 image="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=80"
                 deptLabel={
-                  currentLang === 'de' ? 'ABTEILUNG 02 // INTERNATIONALE BEZIEHUNGEN & SCHENGEN' :
-                  currentLang === 'ar' ? 'القسم ٠٢ // العلاقات الدولية وممر شنغن' :
-                  'DEPT_02 // INTERNATIONAL RELATIONS & SCHENGEN GATEWAY'
+                  currentLang === 'de' ? 'Abteilung 02 · Internationale Beziehungen' :
+                  currentLang === 'ar' ? 'القسم ٠٢ · العلاقات الدولية' :
+                  currentLang === 'tr' ? 'Bölüm 02 · Uluslararası İlişkiler' :
+                  'Division 02 · International Relations'
                 }
                 title={t.navTrade}
                 description={
@@ -702,11 +734,11 @@ export default function App() {
                   currentLang === 'ar' ? 'تسهيل التجارة العالمية المتوافقة مع شنغن، التخليص الجمركي الدبلوماسي الآمن، وممرات الشحن متعددة الوسائط عالية الكفاءة.' :
                   'Schengen-compliant global trade facilitation, secure diplomatic customs clearance, and high-efficiency multimodal shipping corridors.'
                 }
+                highlights={['€82M+ Volume', 'Schengen ⇄ GCC', '12 Global Ports']}
                 isRTL={isRTL}
               />
 
-              {/* Dedicated Page View Content */}
-              <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
+              <div className="corp-card p-6 sm:p-10">
                 <TradeSection currentLang={currentLang} />
               </div>
 
@@ -736,9 +768,10 @@ export default function App() {
               <PageHero 
                 image="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1600&q=80"
                 deptLabel={
-                  currentLang === 'de' ? 'ABTEILUNG 03 // EXKLUSIVE FAHRZEUG-BESCHAFFUNG' :
-                  currentLang === 'ar' ? 'القسم ٠٣ // تأمين أساطيل السيارات الفاخرة' :
-                  'DEPT_03 // PRESTIGE FLEET ACQUISITIONS'
+                  currentLang === 'de' ? 'Abteilung 03 · Fahrzeugbeschaffung' :
+                  currentLang === 'ar' ? 'القسم ٠٣ · تأمين أساطيل السيارات الفاخرة' :
+                  currentLang === 'tr' ? 'Bölüm 03 · Araç Tedarik' :
+                  'Division 03 · Prestige Fleet Acquisitions'
                 }
                 title={t.navAutomotive}
                 description={
@@ -746,11 +779,11 @@ export default function App() {
                   currentLang === 'ar' ? 'تأمين عابر للقارات لأساطيل السيارات الألمانية الفاخرة، والسيارات الرياضية النادرة، والتنسيق الجمركي بين الاتحاد الأوروبي والخليج العربي.' :
                   'Continental sourcing of premium German automotive fleets, luxury exotic sports cars, and customs coordination for EU-GCC corridors.'
                 }
+                highlights={['German Sourcing', 'EU ⇄ GCC Transit', 'Premium Fleet']}
                 isRTL={isRTL}
               />
 
-              {/* Dedicated Page View Content */}
-              <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
+              <div className="corp-card p-6 sm:p-10">
                 <AutomotiveSection currentLang={currentLang} listings={listings} />
               </div>
 
@@ -780,9 +813,10 @@ export default function App() {
               <PageHero 
                 image="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1600&q=80"
                 deptLabel={
-                  currentLang === 'de' ? 'ABTEILUNG 04 // LACKSCHUTZ-LABORATORIEN' :
-                  currentLang === 'ar' ? 'القسم ٠٤ // مختبرات حماية الطلاء الفاخر' :
-                  'DEPT_04 // PRESTIGE SHIELD LABS'
+                  currentLang === 'de' ? 'Abteilung 04 · Lackschutz-Laboratorien' :
+                  currentLang === 'ar' ? 'القسم ٠٤ · مختبرات حماية الطلاء' :
+                  currentLang === 'tr' ? 'Bölüm 04 · Boya Koruma Laboratuvarları' :
+                  'Division 04 · Prestige Shield Labs'
                 }
                 title={t.navCarCare}
                 description={
@@ -790,11 +824,11 @@ export default function App() {
                   currentLang === 'ar' ? 'تطبيق أفلام حماية الطلاء (PPF) ذات المعالجة الذاتية ودروع السيراميك والزجاج المائي PPG عالية اللمعان والمقاومة للمياه.' :
                   'Surgical-grade Paint Protection Film (PPF) application and next-generation high-gloss PPG hydrophobic glass/ceramic armor.'
                 }
+                highlights={['Self-Healing PPF', 'Ceramic Coating', 'Premium Detailing']}
                 isRTL={isRTL}
               />
 
-              {/* Dedicated Page View Content */}
-              <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
+              <div className="corp-card p-6 sm:p-10">
                 <CarCareSection currentLang={currentLang} pricingData={carCarePrices} />
               </div>
 
@@ -824,9 +858,10 @@ export default function App() {
               <PageHero 
                 image="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80"
                 deptLabel={
-                  currentLang === 'de' ? 'ABTEILUNG 05 // EXKLUSIVE PRESTIGE-VERMIETUNG' :
-                  currentLang === 'ar' ? 'القسم ٠٥ // أسطول تأجير السيارات الفارهة للمحترفين' :
-                  'DEPT_05 // PRESTIGE FLEET RENTALS'
+                  currentLang === 'de' ? 'Abteilung 05 · Prestige-Vermietung' :
+                  currentLang === 'ar' ? 'القسم ٠٥ · تأجير السيارات الفارهة' :
+                  currentLang === 'tr' ? 'Bölüm 05 · Lüks Araç Kiralama' :
+                  'Division 05 · Prestige Fleet Rentals'
                 }
                 title={t.navRental}
                 description={
@@ -834,11 +869,11 @@ export default function App() {
                   currentLang === 'ar' ? 'استمتع بأعلى مستويات الرفاهية والأداء الخارق مع أسطولنا الحصري من السيارات الرياضية الخارقة وسيارات الدفع الرباعي الفاخرة.' :
                   'Experience unrivaled high-performance and exquisite automotive engineering with our hand-selected fleet of supercars and elite luxury SUVs.'
                 }
+                highlights={['Supercar Fleet', 'Chauffeur Service', 'Self-Drive Available']}
                 isRTL={isRTL}
               />
 
-              {/* Dedicated Page View Content */}
-              <div className="bg-[#111111]/30 border border-white/5 rounded-sm p-4 sm:p-8 backdrop-blur-sm shadow-2xl">
+              <div className="corp-card p-6 sm:p-10">
                 <CarRentalSection currentLang={currentLang} rentals={rentals} />
               </div>
 
@@ -867,9 +902,10 @@ export default function App() {
               <PageHero 
                 image="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=80"
                 deptLabel={
-                  currentLang === 'de' ? 'KERN-INFRASTRUKTUR // SICHERHEITSREGISTER' :
-                  currentLang === 'ar' ? 'البنية التحتية الأساسية // سجل الأمان المغلق' :
-                  'CORE INFRASTRUCTURE // SECURITY LEDGER'
+                  currentLang === 'de' ? 'Kern-Infrastruktur · Sicherheitsregister' :
+                  currentLang === 'ar' ? 'البنية التحتية · سجل الأمان' :
+                  currentLang === 'tr' ? 'Altyapı · Güvenlik Kaydı' :
+                  'Core Infrastructure · Security Registry'
                 }
                 title="Consortium Registry Control"
                 description={
@@ -877,6 +913,7 @@ export default function App() {
                   currentLang === 'ar' ? 'مطلوب صلاحيات الموظفين المعتمدين فقط. لوحة تحكم لإضافة وتعديل وحذف أصول السيارات للكونسورتيوم.' :
                   'Authorized personnel credentials required. Operations dashboard to publish, synchronize, or archive corporate vehicle assets.'
                 }
+                highlights={['Secure Access', 'Asset Management', 'Multi-Division']}
                 isRTL={isRTL}
               />
 
@@ -903,7 +940,7 @@ export default function App() {
       </main>
 
       {/* Dynamic Footer Component */}
-      <Footer currentLang={currentLang} onOpenStaticPage={(page) => setActiveStaticPage(page)} />
+      <Footer currentLang={currentLang} onOpenStaticPage={(page) => setActiveStaticPage(page)} onSectionChange={handleSectionChange} />
 
       {/* Static Info Legal Pages */}
       <StaticPagesModal

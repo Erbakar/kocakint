@@ -3,12 +3,64 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-gold: #C5A059;
+  --color-gold-light: #E0C080;
+  --color-surface: #111111;
+  --color-surface-elevated: #161616;
+  --color-bg: #0A0A0A;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased;
+    background-color: var(--color-bg);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(197, 160, 89, 0.06), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(255, 255, 255, 0.02), transparent);
+  }
+}
+
+@layer components {
+  .section-label {
+    @apply text-xs font-bold font-mono text-[#C5A059] uppercase tracking-[0.25em];
+  }
+
+  .section-title {
+    @apply text-3xl sm:text-4xl font-serif text-white tracking-tight leading-tight;
+  }
+
+  .section-subtitle {
+    @apply text-sm sm:text-base text-white/55 leading-relaxed max-w-2xl;
+  }
+
+  .corp-card {
+    @apply bg-[#111111] border border-white/10 rounded-sm transition-all duration-300;
+  }
+
+  .corp-card-hover {
+    @apply hover:border-[#C5A059]/25 hover:shadow-[0_8px_40px_rgba(0,0,0,0.5)];
+  }
+
+  .corp-stat-value {
+    @apply text-3xl sm:text-4xl font-serif font-semibold text-[#C5A059] leading-none;
+  }
+
+  .corp-stat-label {
+    @apply text-xs text-white/45 uppercase tracking-wider font-medium mt-2;
+  }
+
+  .corp-divider {
+    @apply border-t border-white/10;
+  }
+
+  .gold-accent-line {
+    @apply w-12 h-0.5 bg-[#C5A059] mb-6;
   }
 }
 
@@ -42,3 +94,11 @@
   animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+@keyframes scrollHint {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+.animate-scroll-hint {
+  animation: scrollHint 2s ease-in-out infinite;
+}
