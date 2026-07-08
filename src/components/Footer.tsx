@@ -185,7 +185,13 @@ export default function Footer({ currentLang, onOpenStaticPage }: FooterProps) {
               </a>
             </span>
           </div>
-          <div className="flex items-center gap-6 text-white/40" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+          <div className="flex flex-wrap items-center gap-6 text-white/40" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+            <button 
+              onClick={() => { window.location.hash = '#admin'; }} 
+              className="hover:text-[#C5A059] text-white/30 border border-white/10 hover:border-[#C5A059]/30 rounded px-2.5 py-1 text-[10px] font-mono transition-all uppercase cursor-pointer flex items-center gap-1 bg-[#111111]/40"
+            >
+              🔐 {currentLang === 'de' ? 'Admin-Bereich' : currentLang === 'ar' ? 'بوابة المشرف' : currentLang === 'tr' ? 'Yönetici Girişi' : 'Admin Portal'}
+            </button>
             <button onClick={() => onOpenStaticPage('privacy')} className="hover:text-[#C5A059] transition-colors text-xs font-medium cursor-pointer bg-transparent border-none p-0 outline-none">
               {currentLang === 'de' ? 'Datenschutzerklärung' : currentLang === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}
             </button>

@@ -213,7 +213,7 @@ export default function CarRentalSection({ currentLang, rentals }: CarRentalSect
             return (
               <div 
                 key={car.id} 
-                className={`bg-[#111111] border rounded-sm overflow-hidden flex flex-col justify-between transition-all duration-300 ${
+                className={`bg-[#111111] border rounded-sm overflow-hidden flex flex-col justify-between transition-all duration-300 h-full ${
                   selectedCarId === car.id ? 'border-[#C5A059] shadow-[0_4px_30px_rgba(197,160,89,0.04)]' : 'border-white/10'
                 } ${!isDriverValid ? 'opacity-50 hover:opacity-75' : ''}`}
               >
@@ -225,6 +225,9 @@ export default function CarRentalSection({ currentLang, rentals }: CarRentalSect
                       alt={car.name} 
                       className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800';
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-transparent to-transparent"></div>
                     

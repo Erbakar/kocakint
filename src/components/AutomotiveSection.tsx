@@ -31,7 +31,7 @@ function VehicleCard({ car, currentLang, onOpenModal, isRTL, t }: VehicleCardPro
   return (
     <div 
       id={`car-card-${car.id}`}
-      className="group bg-[#111111] border border-white/10 rounded-sm overflow-hidden shadow-xl hover:shadow-2xl hover:border-[#C5A059]/30 transition-all flex flex-col justify-between"
+      className="group bg-[#111111] border border-white/10 rounded-sm overflow-hidden shadow-xl hover:shadow-2xl hover:border-[#C5A059]/30 transition-all flex flex-col justify-between h-full"
     >
       {/* Image Container */}
       <div className="relative aspect-video overflow-hidden bg-[#0A0A0A] group/slider">
@@ -40,6 +40,9 @@ function VehicleCard({ car, currentLang, onOpenModal, isRTL, t }: VehicleCardPro
           alt={car.title} 
           className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
           referrerPolicy="no-referrer"
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800';
+          }}
         />
         
         {/* Status Badge */}

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Language, ActiveSection, CarListing, RentalCar, CarCarePricing } from './types';
 import { translations } from './translations';
 import { initialVehicles, initialRentals, initialCarCarePrices } from './initialData';
@@ -19,7 +19,7 @@ import CarCareSection from './components/CarCareSection';
 import CarRentalSection from './components/CarRentalSection';
 import StaticPagesModal from './components/StaticPagesModal';
 
-import { Cpu, Landmark, Car, ArrowUpRight, ShieldCheck, Sparkles, Star, Anchor, ChevronDown, Key } from 'lucide-react';
+import { Cpu, Landmark, Car, ArrowUpRight, ShieldCheck, Sparkles, Star, Anchor, ChevronDown, Key, Play, Pause } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface PageHeroProps {
@@ -66,31 +66,65 @@ export default function App() {
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [activeStaticPage, setActiveStaticPage] = useState<'privacy' | 'terms' | 'imprint' | null>(null);
 
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+
+  const toggleVideoPlayback = () => {
+    if (videoRef.current) {
+      if (isVideoPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play().catch((err) => console.log('Video play error:', err));
+      }
+      setIsVideoPlaying(!isVideoPlaying);
+    }
+  };
+
   // Load state databases from localStorage on startup, fallback to high-end initial data
   useEffect(() => {
-    // 1. Vehicle Listings
+    // 1. Vehicle Listings - Ultra resilient parsing and migration
     const saved = localStorage.getItem('kocakint_listings_db');
     if (saved) {
       try {
-        const parsed = JSON.parse(saved) as CarListing[];
-        const needsUpdate = parsed.some(car => !car.imageUrls);
-        if (needsUpdate) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
           const migrated = parsed.map(car => {
-            if (!car.imageUrls) {
-              return {
-                ...car,
-                imageUrls: [car.imageUrl]
-              };
-            }
-            return car;
+            const hasImageUrls = Array.isArray(car.imageUrls);
+            const hasDescriptionObj = car.description && typeof car.description === 'object';
+            return {
+              ...car,
+              id: car.id || `car-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+              title: car.title || 'Untitled Luxury Asset',
+              make: car.make || 'Custom',
+              model: car.model || 'Spec',
+              year: Number(car.year) || new Date().getFullYear(),
+              price: Number(car.price) || 0,
+              currency: car.currency || 'EUR',
+              mileage: car.mileage || '0 km',
+              fuelType: car.fuelType || 'Gasoline',
+              transmission: car.transmission || 'Automatic',
+              imageUrl: car.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800',
+              imageUrls: hasImageUrls ? car.imageUrls : [car.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800'],
+              status: car.status === 'sold' ? 'sold' : 'available',
+              description: hasDescriptionObj ? car.description : {
+                en: car.description || car.title || '',
+                de: car.description || car.title || '',
+                ar: car.description || car.title || '',
+                tr: car.description || car.title || ''
+              },
+              specs: Array.isArray(car.specs) ? car.specs : []
+            };
           });
           setListings(migrated);
           localStorage.setItem('kocakint_listings_db', JSON.stringify(migrated));
         } else {
-          setListings(parsed);
+          setListings(initialVehicles);
+          localStorage.setItem('kocakint_listings_db', JSON.stringify(initialVehicles));
         }
       } catch (e) {
+        console.error("Resilient load failed, falling back to original assets:", e);
         setListings(initialVehicles);
+        localStorage.setItem('kocakint_listings_db', JSON.stringify(initialVehicles));
       }
     } else {
       setListings(initialVehicles);
@@ -158,6 +192,27 @@ export default function App() {
       window.removeEventListener('popstate', handleHashChange);
     };
   }, []);
+
+  // Force play ambient video when home page is active
+  useEffect(() => {
+    if (activeSection === 'home' && videoRef.current) {
+      const playVideo = async () => {
+        try {
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            await videoRef.current.play();
+            setIsVideoPlaying(true);
+          }
+        } catch (err) {
+          console.log('Autoplay forced playback helper triggered:', err);
+        }
+      };
+      playVideo();
+      // Schedule a second attempt to bypass initial react mounting lock
+      const timer = setTimeout(playVideo, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [activeSection]);
 
   // Sync listings changes back to localStorage
   const saveListings = (updatedListings: CarListing[]) => {
@@ -418,13 +473,40 @@ export default function App() {
             >
               {/* Hero Banner Grid */}
               <div className="relative py-16 sm:py-24 overflow-hidden border-b border-white/10" id="hero-banner">
-                {/* Background high-resolution corporate skyscraper image */}
-                <img 
-                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80" 
-                  alt="Corporate Tower Backdrop" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-[0.12] mix-blend-lighten"
-                  referrerPolicy="no-referrer"
-                />
+                {/* Ambient luxury automotive video loop background */}
+                <div className="absolute inset-0 w-full h-full overflow-hidden">
+                  <video
+                    ref={videoRef}
+                    src="https://assets.mixkit.co/videos/preview/mixkit-luxury-sports-car-close-up-detail-40296-large.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover opacity-50 transition-opacity duration-1000"
+                    poster="https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1600&q=80"
+                    onCanPlay={(e) => {
+                      e.currentTarget.play().catch((err) => console.log('Video autoplay failed:', err));
+                    }}
+                  >
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-luxury-sports-car-close-up-detail-40296-large.mp4" type="video/mp4" />
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-sports-car-driving-on-a-road-at-sunset-38556-large.mp4" type="video/mp4" />
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-car-under-street-lights-at-night-42171-large.mp4" type="video/mp4" />
+                  </video>
+                  {/* Overlay shadow gradient to maintain text contrast */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/35 to-[#0A0A0A] pointer-events-none"></div>
+                </div>
+
+                {/* Elegant Ambient Loop playback toggle in bottom-right corner of the banner */}
+                <button
+                  onClick={toggleVideoPlayback}
+                  className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#1A1A1A] border border-white/10 hover:border-[#C5A059]/30 rounded-full px-2.5 py-1 text-[10px] font-mono text-white/60 hover:text-[#C5A059] transition-all cursor-pointer backdrop-blur-sm shadow-lg"
+                  title="Toggle Ambient Background Video"
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${isVideoPlaying ? 'bg-[#C5A059] animate-pulse' : 'bg-white/30'}`}></span>
+                  {isVideoPlaying ? <Pause className="w-2.5 h-2.5" /> : <Play className="w-2.5 h-2.5" />}
+                  <span>{isVideoPlaying ? 'LOOP: ACTIVE' : 'LOOP: PAUSED'}</span>
+                </button>
+
                 {/* Dynamic futuristic grid background design */}
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-50"></div>
                 <div className="absolute top-20 left-10 w-96 h-96 bg-[#C5A059]/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }}></div>
@@ -493,18 +575,18 @@ export default function App() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.7, ease: "easeOut" }}
-                        className="group bg-[#111111] border border-white/10 hover:border-white/20 rounded-sm overflow-hidden transition-all duration-500 hover:shadow-[0_12px_45px_rgba(0,0,0,0.8)] cursor-pointer grid grid-cols-1 lg:grid-cols-12"
+                        className="group bg-[#111111] border border-white/10 hover:border-white/20 rounded-sm overflow-hidden transition-all duration-500 hover:shadow-[0_12px_45px_rgba(0,0,0,0.8)] cursor-pointer grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 md:h-[350px] lg:h-[350px]"
                       >
                         {/* Image Column */}
-                        <div className={`lg:col-span-6 relative h-64 sm:h-80 lg:h-auto overflow-hidden bg-[#0A0A0A] ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
-                          <img 
+                        <div className={`md:col-span-6 lg:col-span-6 relative h-64 sm:h-80 md:h-full lg:h-full overflow-hidden bg-[#0A0A0A] ${isEven ? 'md:order-1 lg:order-1' : 'md:order-2 lg:order-2'}`}>
+                           <img 
                             src={div.image} 
                             alt={div.title}
                             className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-85 transition-all duration-1000 ease-out group-hover:scale-105"
                             referrerPolicy="no-referrer"
                           />
                           {/* Rich linear mask for transitions */}
-                          <div className={`absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#111111] via-transparent to-transparent ${isEven ? 'lg:bg-gradient-to-r' : 'lg:bg-gradient-to-l'}`}></div>
+                          <div className={`absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r lg:bg-gradient-to-r from-[#111111] via-transparent to-transparent ${isEven ? 'md:bg-gradient-to-r lg:bg-gradient-to-r' : 'md:bg-gradient-to-l lg:bg-gradient-to-l'}`}></div>
                           
                           {/* Accent Glow Line inside the image */}
                           <div className="absolute top-0 left-0 w-full h-1 lg:w-1 lg:h-full transition-all duration-500" style={{ backgroundColor: div.accent }}></div>
@@ -516,7 +598,7 @@ export default function App() {
                         </div>
 
                         {/* Text Details Column */}
-                        <div className={`lg:col-span-6 p-6 sm:p-10 lg:p-12 flex flex-col justify-between ${isEven ? 'lg:order-2' : 'lg:order-1'}`} style={{ textAlign: isRTL ? 'right' : 'left' }}>
+                        <div className={`md:col-span-6 lg:col-span-6 p-6 sm:p-10 md:p-10 lg:p-10 flex flex-col justify-between h-full ${isEven ? 'md:order-2 lg:order-2' : 'md:order-1 lg:order-1'}`} style={{ textAlign: isRTL ? 'right' : 'left' }}>
                           <div>
                             <div className="flex items-center gap-3 mb-6" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
                               <div 
