@@ -477,35 +477,21 @@ export default function App() {
                 <div className="absolute inset-0 w-full h-full overflow-hidden">
                   <video
                     ref={videoRef}
-                    src="https://assets.mixkit.co/videos/preview/mixkit-luxury-sports-car-close-up-detail-40296-large.mp4"
+                    src="/videos/hero-video.mp4"
                     autoPlay
                     loop
                     muted
                     playsInline
                     className="w-full h-full object-cover opacity-50 transition-opacity duration-1000"
-                    poster="https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1600&q=80"
                     onCanPlay={(e) => {
                       e.currentTarget.play().catch((err) => console.log('Video autoplay failed:', err));
                     }}
-                  >
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-luxury-sports-car-close-up-detail-40296-large.mp4" type="video/mp4" />
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-sports-car-driving-on-a-road-at-sunset-38556-large.mp4" type="video/mp4" />
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-car-under-street-lights-at-night-42171-large.mp4" type="video/mp4" />
-                  </video>
+                  />
                   {/* Overlay shadow gradient to maintain text contrast */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/35 to-[#0A0A0A] pointer-events-none"></div>
                 </div>
 
-                {/* Elegant Ambient Loop playback toggle in bottom-right corner of the banner */}
-                <button
-                  onClick={toggleVideoPlayback}
-                  className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 bg-[#111111]/80 hover:bg-[#1A1A1A] border border-white/10 hover:border-[#C5A059]/30 rounded-full px-2.5 py-1 text-[10px] font-mono text-white/60 hover:text-[#C5A059] transition-all cursor-pointer backdrop-blur-sm shadow-lg"
-                  title="Toggle Ambient Background Video"
-                >
-                  <span className={`w-1.5 h-1.5 rounded-full ${isVideoPlaying ? 'bg-[#C5A059] animate-pulse' : 'bg-white/30'}`}></span>
-                  {isVideoPlaying ? <Pause className="w-2.5 h-2.5" /> : <Play className="w-2.5 h-2.5" />}
-                  <span>{isVideoPlaying ? 'LOOP: ACTIVE' : 'LOOP: PAUSED'}</span>
-                </button>
+              
 
                 {/* Dynamic futuristic grid background design */}
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-50"></div>
