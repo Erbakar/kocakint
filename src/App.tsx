@@ -73,10 +73,19 @@ export default function App() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as CarListing[];
-        const needsUpdate = parsed.some(car => !car.imageUrls || car.imageUrls.length < 5);
+        const needsUpdate = parsed.some(car => !car.imageUrls);
         if (needsUpdate) {
-          setListings(initialVehicles);
-          localStorage.setItem('kocakint_listings_db', JSON.stringify(initialVehicles));
+          const migrated = parsed.map(car => {
+            if (!car.imageUrls) {
+              return {
+                ...car,
+                imageUrls: [car.imageUrl]
+              };
+            }
+            return car;
+          });
+          setListings(migrated);
+          localStorage.setItem('kocakint_listings_db', JSON.stringify(migrated));
         } else {
           setListings(parsed);
         }
